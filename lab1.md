@@ -113,7 +113,7 @@ This is the HTTP lab. In this lab you will learn to understand the basics of HTT
 
    > What differences do you see?
    >
-   > Until now you've had to make sure that all your requests end with two blank lines, however this request ends with no blank lines. Ending with two blank lines is a special case of an HTTP message where the message contains no body, the two blank lines actually indicate the division between the end of the headers and the beginning of the body. Because HTTP runs over TCP, a stream protocol, it's important to know where one request ends and another begin. This is the purpose of the `Content-Length` header, it tells the receiver of the message how many octets (8-bit btyes) of body it should expect to receive.
+   > Until now you've had to make sure that all your requests end with two blank lines, however this request ends with no blank lines. Ending with two blank lines is a special case of an HTTP message where the message contains no body, the two blank lines actually indicate the division between the end of the headers and the beginning of the body. Because HTTP runs over TCP, a stream protocol, it's important to know where one request ends and another begin. This is the purpose of the `Content-Length` header, it tells the receiver of the message how many octets (8-bit bytes) of body it should expect to receive.
 
 ## An Aside
 
