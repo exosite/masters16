@@ -11,8 +11,8 @@
   <link rel="icon" href="/assets/favicon.png">
 
   <!-- Style -->
-  <link  href='/masters16//assets/github-markdown.css' rel='stylesheet'>
-  <link href='/masters16//assets/style.css' rel='stylesheet'>
+  <link  href='/masters16/assets/github-markdown.css' rel='stylesheet'>
+  <link href='/masters16/assets/style.css' rel='stylesheet'>
 </head>
 <body>
 <article class="markdown-body">
@@ -276,7 +276,7 @@ Request-Timeout: 10000
 </li>
 <li><p>TAKE IT FURTHER: Using only what this lab has taught you about long polling will cause fairly severe problems in any real-world application. Before reading on, try to figure out what the one fundamental problem this request pattern creates.</p>
 </li>
-<li><p>The problem comes from the fact that you don&#39;t constantly have an open request to the server open and reestablishing the long-polling request takes a non-zero amount of time. This means that if the resource changes during the time that your device does not have an active long-poling request you will miss that datapoint. The device API handles this with the addition of another header, read the documentation for long-polling requests and see if you can figure out how to work around this. You </p>
+<li><p>The problem comes from the fact that you don&#39;t constantly have an open request to the server open and reestablishing the long-polling request takes a non-zero amount of time. This means that if the resource changes during the time that your device does not have an active long-poling request you will miss that datapoint. The device API handles this with the addition of another header, read the documentation for long-polling requests and see if you can figure out how to work around this. You can find the documentation for this at <a href="http://docs.exosite.com/http/#long-polling">http://docs.exosite.com/http/#long-polling</a>.</p>
 </li>
 </ol>
 
