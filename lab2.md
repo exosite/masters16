@@ -66,6 +66,8 @@ Options in CoAP are very similar to headers in HTTP, let's explore them.
    }
    ```
 
+   > The one option that we are sending is a URI-Path option, in this case we're sending a URI with a single path component, that is to say the URI path is "/ts".
+
 2. Press the \[Send\] button.
 
 3. Compare the response of that request to the response of the following request:
@@ -88,7 +90,7 @@ Options in CoAP are very similar to headers in HTTP, let's explore them.
 
    > Do you notice a difference in the response?
    >
-   > The `Accept` option specified here the format of the response that the requester would like to receive. There's no default value for Accept so the server is free to use any default format it wants. In the case of the second request we're setting a value of 42 which [is defined as](https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats) "application/octet-stream", which just means "arbitrary binary data", and which we are using as a method to send a 32-bit timestamp in a raw format.
+   > This request adds an `Accept` option which specifies the format of the response that the requester would like to receive. There's no default value for Accept so the server is free to use any default format it wants. In the case of the second request we're setting a value of 42 which [is defined as](https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats) "application/octet-stream", which just means "arbitrary binary data", and which we are using as a method to send a 32-bit timestamp in a raw format.
 
 ### Understanding Codes
 
@@ -115,7 +117,7 @@ Again, much like a request method, coap uses a 'code' to define what the message
 
 2. Press the \[Send\] button.
 
-3. Compare that **request** to the following request (the response is not important in this case):
+3. Compare that **request** to the following request (the response is not as important in this case):
 
 
    ```json
@@ -136,13 +138,13 @@ Again, much like a request method, coap uses a 'code' to define what the message
 
    > Again, just like in HTTP we change from a "GET" to a "POST" and add a payload ("body" in HTTP terms.)
    >
-   > You should get an error response to that request, that is expected. We'll use POST requests more in the RPC section.
+   > You should get an error response to that request, that is expected. We'll use POST requests that actually get a success response more in the RPC section.
 
 ## An Aside
 
 You don't need to understand this part it's only used to generate a token that will be used later in this lab.
 
-   > You may have already done this in Lab 1, but the keys that this script uses are automatically deleted periodically so your old key may no longer work.
+   > You may have already done this in Lab 1, but the keys that this script generates are automatically deleted periodically so your old key may no longer work.
 
 1. Paste the following into the `script` box on [https://play-dev.exosite.io/script](https://play-dev.exosite.io/script).
 
@@ -204,16 +206,21 @@ REST, or Representational State Transfer, is one of the simplest structured patt
 
    ```json
    {
-       "version": 1,
-       "type": "CON",
-       "code": "GET",
-       "mid": 55,
-       "token": [45,203],
-       "opts": {
-           "UriPath": [
-               "ts"
-           ]
-       }
+     "version": 1,
+     "type": "CON",
+     "code": "GET",
+     "mid": 9,
+     "token": [76,2203],
+     "opts": {
+       "UriPath": [
+         "1a",
+         "temp"
+       ],
+       "UriQuery": [
+         "<CIK>"
+       ],
+       "Observe":0
+     }
    }
    ```
 
@@ -232,42 +239,93 @@ RPC, or Remote Procedure Call, is another communication pattern that can be buil
    {
        "version": 1,
        "type": "CON",
-       "code": "GET",
-       "mid": 55,
-       "token": [45,203],
+       "code": "POST",
+       "mid": 163,
+       "token": [9],
        "opts": {
            "UriPath": [
-               "ts"
-           ]
-       }
+               "rpc"
+           ],
+           "ContentFormat": 60,
+           "Accept": 60
+       },
+       "payload": {
+          "auth": {
+              "cik": "<CIK>"
+          },
+          "calls": [
+              {
+                  "procedure": "read",
+                  "arguments": [
+                      {"alias": "temp"},
+                      {}
+                  ],
+                  "id": 1
+              }
+          ]
+      }
    }
    ```
 
-   > Note:  Again, there are two blank lines after the text in the above example are important, make sure they are included after you paste into the `http terminal` page. And make sure to replace `<CIK>` with the CIK you generated earlier.
+   > Note:  There is a bit of extra magic going on here. This request has it's Content-Format set to '60' this is the Content-Format for [CBOR](http://cbor.io), a binary encoding format for JSON-like data structures. The CoAP Terminal will automatically encode an object-type payload into cbor when the Content-Format is set to application/cbor (60). It will also decode anything that looks like cbor into an object to be shown as JSON in the friendly format.
 
 2. Press the \[Send\] button.
 
 
 ### Observe
 
-CoAP *does* have an official method for pushing notifications from the server to the client. CoAP has a pattern that it calls "Observe". A CoAP client can request to 'observe' a resource. This tells the server to send a notification to the client any time that resource changes. CoAP is able to do this since it is a message-based protocol that does not depend on always being request-response only to match responses to requests. 
+CoAP *does* have an official method for pushing notifications from the server to the client. CoAP has a pattern that it calls "Observe". A CoAP client can request to 'observe' a resource. This tells the server to send a notification to the client any time that resource changes. CoAP is able to do this since it is a message-based protocol that does not depend on always being request-response for the purpose of matching requests to responses.
 
 1. Copy and Paste the Following into the request box on [https://play-dev.exosite.io/coap](https://play-dev.exosite.io/coap):
 
    ```json
    {
-       "version": 1,
-       "type": "CON",
-       "code": "GET",
-       "mid": 55,
-       "token": [45,203],
-       "opts": {
-           "UriPath": [
-               "ts"
-           ]
-       }
+     "version": 1,
+     "type": "CON",
+     "code": "GET",
+     "mid": 55,
+     "token": [45,203],
+     "opts": {
+       "UriPath": [
+         "1a",
+         "temp"
+       ],
+       "UriQuery": [
+         "<CIK>"
+       ],
+       "Observe":0
+     }
    }
    ```
 
-2. Press the \[Send\] button.
+2. **Check the "Enable Auto Ack" Checkbox**
 
+3. Press the \[Send\] button.
+
+   > You're now observing the "temp" dataport any updates to temp will be pushed to your session in real time.
+
+4. Open a second [CoAP terminal window](https://play-dev.exosite.io/coap) and run the following:
+
+   ```json
+   {
+     "version": 1,
+     "type": "CON",
+     "code": "POST",
+     "mid": 92,
+     "token": [54,8],
+     "opts": {
+       "UriPath": [
+         "1a",
+         "temp"
+       ],
+       "UriQuery": [
+         "<CIK>"
+       ]
+     }
+     "payload": "-40"
+   }
+   ```
+
+   > This performs a write, as soon as you press \[Send\] on this request you should get a notification in the original window telling you that the 'temp' is now -40.
+
+5. TAKE IT FURTHER: Try sharing your CIK with a neighbor. While one of you is subscribed have the other write a value to the dataport. You can also try using HTTP to write to the dataport.
