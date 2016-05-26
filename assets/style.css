@@ -1,0 +1,45 @@
+body {
+  width: 640px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.header {
+  background: #222736;
+  text-shadow: none;
+  padding: 30px 25px 30px 20px;
+  height: 50px;
+}
+
+.header .right {
+  float: right;
+  position: static;
+}
+
+/* External Link Icons */
+.content a[href^="http://"], .content a[href^="https://"] {
+  background: url(/assets/external_link.png) center right no-repeat;
+  background-size: 10px;
+  padding-right: 12px;
+}
+
+img.ext_link_icon {
+  height: 10px;
+}
+
+/* Message Boxes */
+.messagebox {
+  padding: 15px;
+}
+.messagebox.error {
+  color: #00529B;
+  background-color: #BDE5F8;
+}
+.messagebox.success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+.messagebox.warning {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
