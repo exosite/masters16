@@ -1,16 +1,24 @@
 ---
 layout: default
-title: "Jekyll Docs Template"
+title: "Labs -- IoT4/20070"
 ---
 
 # IoT4 - 20070
 
-This site hosts the labs for the IoT4 - 20070 class at Microchip MASTERS 2016. Use the links on the left to see each lab.
+This site hosts the labs for the IoT4 - 20070 class at Microchip MASTERS 2016. Use the links below see each lab.
 
 ## Labs
 
-* [Lab 1 - HTTP](./lab1)
-* [Lab 2 - CoAP](./lab2)
+* [Lab 1](./lab1)
+* [Lab 2](./lab2)
+* <s>[Lab 3](./lab3)</s>
+
+## Optional Labs & Guides
+
+* <s>[Lab Setup Guide](./setup)</s>
+* <s>[Lab 4 - Murano](./lab4)</s>
+* <s>[CoAP Lab](./coap)</s>
+* <s>[HTTP Lab](./http)</s>
 
 
 ## Class Chat
