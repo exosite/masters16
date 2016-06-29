@@ -16,269 +16,50 @@
 </head>
 <body>
 <article class="markdown-body">
-<h1 id="lab-1-http">Lab 1 - HTTP</h1>
-<p>This is the HTTP lab. In this lab you will learn to understand the basics of HTTP, the Hypertext Transport Protocol, at a high level for the purposes of debugging IoT devices during development.</p>
-<h2 id="part-1-understanding-the-basics-of-http">Part 1 - Understanding the basics of HTTP</h2>
-<h3 id="a-basic-request">A Basic Request</h3>
-<ol>
-<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/http">https://play-dev.exosite.io/http</a>:</p>
-<pre><code class="lang-http">GET /timestamp HTTP/1.1
-Host: m2.exosite.com
-
-​
-</code></pre>
+<h1 id="lab-1-getting-started-with-the-exositeready-sdk">Lab 1 - Getting Started with the ExositeReady SDK</h1>
+<p>The ExositeReady SDK is a software framework provided by Exosite to ease development of production-quality embedded device firmware for IoT products. It&#39;s open source software, provided under the Apache-2.0 license, that means that you&#39;re free to do whatever you&#39;d like with it as long as you share any changes to the SDK itself while being able to keep the rest of your application&#39;s code private if that&#39;s what you&#39;d like.</p>
+<p>In this lab you&#39;ll go through getting the PIC32MZ Embedded Connectivity Starter Kit flashed with the demo firmware provided alongside the ER SKD. You&#39;ll learn the basics of what is required to get IoT devices connected to the Exosite platform and see real-time data from your devices streaming to your web browser.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>PIC32MZ Embedded Connectivity Starter Kit</li>
+<li>An Internet Connection</li>
+<li>A Computer with MPLAB IDE, including:<ul>
+<li>MPLABX IDE v 3.30</li>
+<li>Harmony v1.08</li>
+<li>XC32 v1.40b</li>
+</ul>
+</li>
+<li>The ExositeReady SDK, plus<ul>
+<li>The PIC32MZECSK port &amp; example application</li>
+</ul>
+</li>
+</ul>
+<p>If you don&#39;t have any of the above software installed, see Tool Setup section before proceeding with this Lab. MASTERS attendees that have access to the in-class lab computers will have this setup already.</p>
+<h1 id="let-s-go">Let&#39;s Go</h1>
+<p>First you&#39;ll want to open MPLAB X.</p>
+<p><img src="/images/mplabx.png" alt="MPLABX IDE Screenshot"></p>
+<p>And open the <code>exositeready_pic32mz</code> project, which can be found in the &quot;C:\microchip\harmony\v1_08\apps\exositeready_pic32mz\firmware&quot; folder.</p>
+<p><img src="/images/open_example_project.png" alt="Open Example Project"></p>
+<p>You can now explore the source of this project if you&#39;d like.</p>
+<p><img src="/images/example_project_fresh.png" alt="Example Project Fresh"></p>
+<h2 id="running-the-example">Running the Example</h2>
+<p>Before we dig into what the code is doing, let&#39;s build, flash, and run the provided example.</p>
+<p>Connect the Starter Kit board to you computer using both mini USB connectors; one is for the onboard debugger and the other is for access to the serial terminal.</p>
+<p>If you have more than one project open in MPLAB, make sure that the <code>exositeready_pic32mz</code> project is set as the main project, it&#39;s name should appear in the window&#39;s title bar, you can do this simply clicking on the project in the &#39;Projects&#39; tab in the left-side bar.</p>
+<p>If you have more than one project open, make sure that the <code>exositeready_pic32mz</code> project is set as the currently active project. The click the &quot;Make and Program Device Main Project&quot; button.</p>
+<p><img src="images/make_and_program_device_main_project_button.png" alt="Make and Program Device Main Project Button"></p>
+<p>You may be prompted to select a different device, this will happen if the starter kit you&#39;re using isn&#39;t the last one used with this project. MPLAB should offer to switch to the kit that is currently connected to your computer; just click &quot;OK&quot;. If you&#39;re shown a list of tools, there should only be one valid option. Choose the item listed under &quot;Starter Kits (PKOB)&quot;.</p>
+<p><img src="images/tool_list.png" alt="Tool List"></p>
+<p>It will take several minutes to compile and flash the board.</p>
+<p>Once this is complete, the board will boot the demo application, connect to Exosite&#39;s servers, and begin reading &amp; writing data. Once this happens you should see the three LEDs along the 40-pin header turn on.</p>
+<p>To follow the progress of the application booting and connecting you can use a serial terminal application to view the application&#39;s debug log. Open the serial terminal application on the computer and connect to the virtual serial port provided by the device, it should be the only one available on your computer.</p>
+<!-- NTS: Expand the above section after figuring out what application they will have on these machines. -->
+<h2 id="interacting-with-the-board-via-the-web">Interacting with the Board Via the Web</h2>
+<p>Once the board has booted the application and connected you can control the LEDs and see the status of the buttons through a custom web app that was created specifically for this class.</p>
+<p>To find your board, go to <a href="https://labui.apps.exosite-dev.io/">https://labui.apps.exosite-dev.io/</a> and find your board in the list by looking at the MAC address. (Note: You can find you device&#39;s MAC address by watching the serial terminal output when you first boot the application.) Select your device and toggle some of the LEDs on and off or press the switches on the board to see the indicators in the webui change.</p>
 <blockquote>
-<p>Note: There are two blank lines after the text in the above example are important, make sure they are included after you paste into the <code>http terminal</code> page.</p>
+<p>Note: I would suggest leaving this project open, lab 2 will pickup where this one left off.</p>
 </blockquote>
-</li>
-<li><p>Press the [Send] button.</p>
-<blockquote>
-<p>What happened? Do you think it worked?</p>
-</blockquote>
-</li>
-<li><p>Change the word <code>GET</code> to <code>POST</code> and press [Send] again.</p>
-<blockquote>
-<p>You&#39;ll see that the response changed. Compare the two different responses, one indicates an error and one indicates a success. Can you tell which is which?</p>
-<p>Look at the first line in the response, this is the status line, the number after <code>HTTP/1.1</code> is the status code (either an error code or some form of success code), which is then followed by the reason phrase. You&#39;ll see that the success response has a status code of &quot;200&quot; and a reason phrase of &quot;OK&quot;. These two tell you the same information in <em>most</em> cases, but both are still required.</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="understanding-headers">Understanding Headers</h3>
-<ol>
-<li><p>Send the original request again, copy and paste the following into <a href="https://play-dev.exosite.io/http">https://play-dev.exosite.io/http</a> :</p>
-<pre><code class="lang-http">GET /timestamp HTTP/1.1
-Host: m2.exosite.com
-
-​
-</code></pre>
-</li>
-<li><p>Press the [Send] button.</p>
-</li>
-<li><p>Compare the response of that request to the response of the following request:</p>
-<pre><code class="lang-http">GET /timestamp HTTP/1.1
-Host: m2.exosite.com
-Not-A-Real-Header: kill-all-humans
-
-​
-</code></pre>
-<blockquote>
-<p>Do you notice a difference?</p>
-<p>There should be no difference (other than the timestamp itself and the date shown in line 2). The difference between the first and second requests was the addition of a new header, the &quot;Not-A-Real-Header&quot; header. There was no change in how the server responded because the server doesn&#39;t know of any header called &quot;Not-A-Real-Header&quot; so it is allowed to ignore it.</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="understanding-methods">Understanding Methods</h3>
-<ol>
-<li><p>Send the original request again, copy and paste the Following into <a href="https://play-dev.exosite.io/http">https://play-dev.exosite.io/http</a> :</p>
-<pre><code class="lang-http">GET /timestamp HTTP/1.1
-Host: m2.exosite.com
-
-​
-</code></pre>
-</li>
-<li><p>Press the [Send] button.</p>
-</li>
-<li><p>Compare the response of that request to the response of the following request:</p>
-<pre><code class="lang-http">POST /timestamp HTTP/1.1
-Host: m2.exosite.com
-
-​
-</code></pre>
-<blockquote>
-<p>Do you notice a difference?</p>
-<p>The second request causes an error to be returned. In this case it&#39;s a <code>406 Method Not Allowed</code> because we changed the method from <code>GET</code> to <code>POST</code> and the timestamp url does not support having data <code>POST</code>ed to it. The method, sometimes also called the &quot;verb&quot;, states what kind of request is being sent. The most common are <code>GET</code> and <code>POST</code>, but there&#39;s also <code>PUT</code>, <code>DELETE</code>, <code>OPTIONS</code>, <code>HEAD</code>, and more. Some of these will be further explained later in the lab.</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="understanding-message-bodies">Understanding Message Bodies</h3>
-<ol>
-<li><p>Send the original request again, copy and paste the Following into <a href="https://play-dev.exosite.io/http">https://play-dev.exosite.io/http</a> :</p>
-<pre><code class="lang-http">GET /timestamp HTTP/1.1
-Host: m2.exosite.com
-
-​
-</code></pre>
-</li>
-<li><p>Press the [Send] button.</p>
-</li>
-<li><p>Compare that <strong>request</strong> to the following request (the response is not interesting in this case):</p>
-<pre><code class="lang-http">POST /api:v1/rpc/process HTTP/1.1
-Host: m2.exosite.com
-Content-Length: 2
-
-{}
-</code></pre>
-<blockquote>
-<p>What differences do you see?</p>
-<p>Until now you&#39;ve had to make sure that all your requests end with two blank lines, however this request ends with no blank lines. Ending with two blank lines is a special case of an HTTP message where the message contains no body, the two blank lines actually indicate the division between the end of the headers and the beginning of the body. Because HTTP runs over TCP, a stream protocol, it&#39;s important to know where one request ends and another begin. This is the purpose of the <code>Content-Length</code> header, it tells the receiver of the message how many octets (8-bit bytes) of body it should expect to receive.</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="an-aside">An Aside</h2>
-<p>You don&#39;t need to fully understand what is happening in this section it&#39;s only used to generate a token that you will use later in this lab.</p>
-<ol>
-<li><p>Paste the following into the <code>script</code> box on <a href="https://play-dev.exosite.io/script">https://play-dev.exosite.io/script</a>.</p>
-<pre><code class="lang-lua">local exosite = require(&#39;https://lualib.webscript.io/exosite-lua-js.lua&#39;)
-local json = require(&quot;https://lualib.webscript.io/dkjson.lua&quot;)
-
--- create client through CIK Fountain
-local status, cik = exosite.get_temporary_cik()
-print(&quot;USE THIS CIK: &quot; .. cik)
-print(status, cik)
-
--- create dataport
-local exo = exosite.rpc:new{cik = cik}
-local status, response = exo:create{
-  &quot;dataport&quot;,
-  {
-    format = &quot;float&quot;,
-    name = &quot;Temperature&quot;,
-    retention = {
-      count = &quot;infinity&quot;,
-      duration = &quot;infinity&quot;
-    }
-  }
-}
-print(status, json.encode(response))
-local rid = response.result
-
--- map alias to dataport
-local status, response = exo:map{&quot;alias&quot;, rid, &quot;temp&quot;}
-print(status, json.encode(response))
-
--- write a value to dataport
-local status, response = exo:write{ {alias=&quot;temp&quot;}, 23.3}
-print(status, json.encode(response))
-
--- read value that was just written, for debugging purposes
-local status, response = exo:read{ {alias=&quot;temp&quot;}, {}}
-print(status, json.encode(response))
-
--- get info for client, for debugging purposes
-local status, response = exo:info{ {alias=&quot;&quot;}, {}}
-print(status, json.encode(response))
-</code></pre>
-</li>
-<li><p>Press the [Run] button.</p>
-<blockquote>
-<p>Note: This will lock-up your browser tab for a few seconds while it does it&#39;s work.</p>
-</blockquote>
-</li>
-<li><p>Find the CIK at the beginning of the log, it will be printed after &quot;USE THIS CIK:&quot;. Copy it and <strong>save this key</strong> in a document on your computer, this is an auth token to be used with the Exosite platform which you will be using at various times later in this lab.</p>
-<blockquote>
-<p>If you&#39;re curious, this is a lua script that runs within your browser, calling the Exosite <a href="http://docs.exosite.com/rpc">RPC API</a> through a lua library included in the first line. It first creates a new client using the &quot;CIK Fountain&quot;, which is a tool to create a client that will get automatically deleted in 30 minutes, and then creates some resources within that client that you will interact with later in this lab.</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="request-patterns-with-http">Request Patterns with HTTP</h2>
-<h3 id="rest">REST</h3>
-<p>REST, Representational State Transfer, is the most common form of communication pattern that is being built on top of HTTP currently. The following performs a rest-like request to the Exosite platform.</p>
-<ol>
-<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/http">https://play-dev.exosite.io/http</a>:</p>
-<pre><code class="lang-http">GET /onep:v1/stack/alias?temp HTTP/1.1
-Host: m2.exosite.com
-X-Exosite-CIK: &lt;CIK&gt;
-Accept: application/x-www-form-urlencoded; charset=utf-8
-
-​
-</code></pre>
-<blockquote>
-<p>Note:  Again, there are two blank lines after the text in the above example are important, make sure they are included after you paste into the <code>http terminal</code> page. Also, you&#39;ll need to replace the text <code>&lt;CIK&gt;</code> with the CIK (auth token) you generate in the previous section.</p>
-</blockquote>
-</li>
-<li><p>Press the [Send] button.</p>
-<blockquote>
-<p>You should have received a response that indicated that the &#39;temp&#39; dataport had a value of &#39;23.3&#39;.</p>
-</blockquote>
-</li>
-<li><p>TAKE IT FURTHER: The request you just made was a &#39;read&#39; request the the Exosite device API, you can find the documentation for that call here, <a href="http://docs.exosite.com/http/#read">http://docs.exosite.com/http/#read</a>. Now, try and take what you&#39;ve learned to make a write request, see the documentation for that call here, <a href="http://docs.exosite.com/http/#write">http://docs.exosite.com/http/#write</a></p>
-</li>
-</ol>
-<h3 id="rpc">RPC</h3>
-<p>RPC, or Remote Procedure Call, is another communication pattern that can be built on top of HTTP. The following </p>
-<ol>
-<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/http">https://play-dev.exosite.io/http</a>:</p>
-<pre><code class="lang-http">POST /api:v1/rpc/process HTTP/1.1
-Host: m2.exosite.com
-Content-Length: 2
-
-{}
-</code></pre>
-</li>
-<li><p>Press the [Send] button.</p>
-</li>
-<li><p>Compare the response of that request to the response of the following request:</p>
-<pre><code class="lang-http">POST /api:v1/rpc/process HTTP/1.1
-Host: m2.exosite.com
-Content-Length: 128
-
-{
-   &quot;auth&quot;: &quot;&lt;CIK&gt;&quot;,
-   &quot;calls&quot;: [{
-       &quot;method&quot;: &quot;not-a-real-method&quot;,
-       &quot;arguments&quot;: {}
-       &quot;id&quot;: 56
-   }]
-}
-</code></pre>
-<blockquote>
-<p>You&#39;ll see that even though we tried to use a method that does not exist, <code>not-a-real-method</code>, we got an HTTP response code of 200 indicating success. This is because RPC does not use the HTTP status code to indicate the success or failure of the calls themselvce, but only if indicate if the server was able to process the format of the request. Errors within each call are returned via the &#39;status&#39; and &#39;error&#39; members of the call response.</p>
-</blockquote>
-</li>
-<li><p>RPC has the benefit of being able to carry more than one &#39;call&#39; in a single request. For example we can fetch the full info about a dataport in the same call the we read from it:</p>
-<pre><code class="lang-http">POST /api:v1/rpc/process HTTP/1.1
-Host: m2.exosite.com
-Content-Length: 2
-
-{
-  &quot;auth&quot;: &quot;&lt;CIK&gt;&quot;,
-  &quot;calls&quot;: [{
-      &quot;method&quot;: &quot;read&quot;,
-      &quot;arguments&quot;: {
-          {&quot;alias&quot;: &quot;temp&quot;},
-          {}
-      },
-      &quot;id&quot;: 56
-  },{
-      &quot;method&quot;: &quot;info&quot;,
-      &quot;arguments&quot;: {
-          {&quot;alias&quot;: &quot;temp&quot;},
-          {}
-      },
-      &quot;id&quot;: &quot;something-else&quot;
-  }]
-
-}
-</code></pre>
-</li>
-</ol>
-<h3 id="long-polling">Long-Polling</h3>
-<p>HTTP doesn&#39;t allow for sending push notifications directly from a server to clients, HTTP long-polling is a method to effectively emulate the behavior of modern push notification systems, but it does so in a manner that is not as obvious or efficient as the systems that were designed for the purpose.</p>
-<ol>
-<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/http">https://play-dev.exosite.io/http</a>:</p>
-<pre><code class="lang-http">GET /onep:v1/stack/alias?temp HTTP/1.1
-Host: m2.exosite.com
-X-Exosite-CIK: &lt;CIK&gt;
-Accept: application/x-www-form-urlencoded; charset=utf-8
-Request-Timeout: 10000
-
-​
-</code></pre>
-<blockquote>
-<p>Note:  Again, there are two blank lines after the text in the above example are important, make sure they are included after you paste into the <code>http terminal</code> page.</p>
-</blockquote>
-</li>
-<li><p>Press the [Send] button.</p>
-<blockquote>
-<p>The request should have taken about 10 seconds to return, at which point you should have gotten an HTTP 304 Not Modified. This response means that the server understood your request but the resource you were requesting didn&#39;t change during the &#39;Request-Timeout&#39; period, in this case 10 seconds.</p>
-<p>Long polling is not an official part of the HTTP protocol, but is instead something of a hack that was devised after the fact. It doesn&#39;t violate any part of the HTTP specification, but there is the possibility that you&#39;ll run into problems using HTTP libraries that weren&#39;t designed with its use in mind, especially in regards to enforced timeouts or blocking of threads.</p>
-</blockquote>
-</li>
-<li><p>TAKE IT FURTHER: Using only what this lab has taught you about long polling will cause fairly severe problems in any real-world application. Before reading on, try to figure out what the one fundamental problem this request pattern creates.</p>
-</li>
-<li><p>The problem comes from the fact that you don&#39;t constantly have an open request to the server open and reestablishing the long-polling request takes a non-zero amount of time. This means that if the resource changes during the time that your device does not have an active long-poling request you will miss that datapoint. The device API handles this with the addition of another header, read the documentation for long-polling requests and see if you can figure out how to work around this. You can find the documentation for this at <a href="http://docs.exosite.com/http/#long-polling">http://docs.exosite.com/http/#long-polling</a>.</p>
-</li>
-</ol>
 
 </article>
 </body>

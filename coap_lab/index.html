@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+
+  <title>IoT4/20070 - MASTERS 2016</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon.png">
+
+  <!-- Style -->
+  <link  href='/masters16/assets/github-markdown.css' rel='stylesheet'>
+  <link href='/masters16/assets/style.css' rel='stylesheet'>
+</head>
+<body>
+<article class="markdown-body">
+<h1 id="lab-2-coap">Lab 2 - CoAP</h1>
+<p>This is the CoAP lab. In this lab you will learn to understand the CoAP protocol at a high level for the purposes of debugging IoT devices during development. Most of this lab should be familiar to you; the majority of it parallels Lab 1 on HTTP.</p>
+<h2 id="part-1-understanding-the-basics-of-coap">Part 1 - Understanding the basics of CoAP</h2>
+<blockquote>
+<p>Note: The format of messages used in this lab is <strong>not</strong> the actual format of a CoAP message. CoAP is a binary protocol that is not easily human readable. Instead this lab uses a format of my own creation that I&#39;m using purely for its ease of understanding. It&#39;s simply a JSON object where each member is one of the components of a CoAP message encoded in an human readable manner.</p>
+</blockquote>
+<h3 id="a-basic-request">A Basic Request</h3>
+<ol>
+<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/coap">https://play-dev.exosite.io/coap</a>:</p>
+<pre><code class="lang-json">{
+    &quot;version&quot;: 1,
+    &quot;type&quot;: &quot;CON&quot;,
+    &quot;code&quot;: &quot;GET&quot;,
+    &quot;mid&quot;: 55,
+    &quot;token&quot;: [45,203],
+    &quot;opts&quot;: {
+        &quot;UriPath&quot;: [
+            &quot;ts&quot;
+        ]
+    }
+}
+</code></pre>
+</li>
+<li><p>Press the [Send] button.</p>
+<blockquote>
+<p>What happened? Do you think it worked?</p>
+<p>Compare this to the HTTP requests you made in Lab 1, it may not look it at first glance, but this request was very similar to the initial request in Lab 1. In lab 1 you made a &quot;get&quot; request to &quot;/timestamp&quot;, in this lab you made a &quot;get&quot; request to &quot;/ts&quot;.</p>
+</blockquote>
+</li>
+<li><p>Change the word <code>GET</code> to <code>POST</code> and press [Send] again.</p>
+<blockquote>
+<p>You&#39;ll see that the response changed. Compare the two different responses, one indicates an error and one indicates a success.</p>
+<p>Look at the <code>code</code> member in the JSON object, see that it changed from &quot;Content&quot; to &quot;MethodNotAllowed&quot;, this should seem very similar to you after the the HTTP lab. In the HTTP lab the response reason was &quot;OK&quot;, in CoAP &quot;Content&quot; has the same meaning (in addition to combining a few other HTTP reasons). When we changed to a POST we, again, got a response saying &quot;Method Not Allowed&quot;. CoAP was designed to be very similar to HTTP so that developers already familiar with HTTP would be able to understand CoAP very quickly.</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="understanding-options">Understanding Options</h3>
+<p>Options in CoAP are very similar to headers in HTTP, let&#39;s explore them.</p>
+<ol>
+<li><p>Send the original request again, copy and paste the following into <a href="https://play-dev.exosite.io/coap">https://play-dev.exosite.io/coap</a>:</p>
+<pre><code class="lang-json">{
+    &quot;version&quot;: 1,
+    &quot;type&quot;: &quot;CON&quot;,
+    &quot;code&quot;: &quot;GET&quot;,
+    &quot;mid&quot;: 55,
+    &quot;token&quot;: [45,203],
+    &quot;opts&quot;: {
+        &quot;UriPath&quot;: [
+            &quot;ts&quot;
+        ]
+    }
+}
+</code></pre>
+<blockquote>
+<p>The one option that we are sending is a URI-Path option, in this case we&#39;re sending a URI with a single path component, that is to say the URI path is &quot;/ts&quot;.</p>
+</blockquote>
+</li>
+<li><p>Press the [Send] button.</p>
+</li>
+<li><p>Compare the response of that request to the response of the following request:</p>
+<pre><code class="lang-json">{
+    &quot;version&quot;: 1,
+    &quot;type&quot;: &quot;CON&quot;,
+    &quot;code&quot;: &quot;GET&quot;,
+    &quot;mid&quot;: 55,
+    &quot;token&quot;: [45,203],
+    &quot;opts&quot;: {
+        &quot;UriPath&quot;: [
+            &quot;ts&quot;
+        ],
+        &quot;Accept&quot;: 42
+    }
+}
+</code></pre>
+<blockquote>
+<p>Do you notice a difference in the response?</p>
+<p>This request adds an <code>Accept</code> option which specifies the format of the response that the requester would like to receive. There&#39;s no default value for Accept so the server is free to use any default format it wants. In the case of the second request we&#39;re setting a value of 42 which <a href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats">is defined as</a> &quot;application/octet-stream&quot;, which just means &quot;arbitrary binary data&quot;, and which we are using as a method to send a 32-bit timestamp in a raw format.</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="understanding-codes">Understanding Codes</h3>
+<p>Again, much like a request method, coap uses a &#39;code&#39; to define what the message type is.</p>
+<ol>
+<li><p>Send the original request again, copy and paste the following into <a href="https://play-dev.exosite.io/coap">https://play-dev.exosite.io/coap</a>:</p>
+<pre><code class="lang-json">{
+    &quot;version&quot;: 1,
+    &quot;type&quot;: &quot;CON&quot;,
+    &quot;code&quot;: &quot;GET&quot;,
+    &quot;mid&quot;: 55,
+    &quot;token&quot;: [45,203],
+    &quot;opts&quot;: {
+        &quot;UriPath&quot;: [
+            &quot;ts&quot;
+        ]
+    }
+}
+</code></pre>
+<blockquote>
+<p>See that in this request we have a &#39;code&#39; of &quot;GET&quot; which indicates that this is the same type of request that would be used for an HTTP request with a method of &quot;GET&quot;.</p>
+</blockquote>
+</li>
+<li><p>Press the [Send] button.</p>
+</li>
+<li><p>Compare that <strong>request</strong> to the following request (the response is not as important in this case):</p>
+</li>
+</ol>
+<pre><code class="lang-json">   {
+       &quot;version&quot;: 1,
+       &quot;type&quot;: &quot;CON&quot;,
+       &quot;code&quot;: &quot;POST&quot;,
+       &quot;mid&quot;: 56,
+       &quot;token&quot;: [45,37],
+       &quot;opts&quot;: {
+           &quot;UriPath&quot;: [
+               &quot;rpc&quot;
+           ]
+       },
+       &quot;payload&quot;: &quot;{}&quot;
+   }
+</code></pre>
+<blockquote>
+<p>Again, just like in HTTP we change from a &quot;GET&quot; to a &quot;POST&quot; and add a payload (&quot;body&quot; in HTTP terms.)</p>
+<p>You should get an error response to that request, that is expected. We&#39;ll use POST requests that actually get a success response more in the RPC section.</p>
+</blockquote>
+<h2 id="an-aside">An Aside</h2>
+<p>You don&#39;t need to understand this part it&#39;s only used to generate a token that will be used later in this lab.</p>
+<blockquote>
+<p>You may have already done this in Lab 1, but the keys that this script generates are automatically deleted periodically so your old key may no longer work.</p>
+</blockquote>
+<ol>
+<li><p>Paste the following into the <code>script</code> box on <a href="https://play-dev.exosite.io/script">https://play-dev.exosite.io/script</a>.</p>
+<pre><code class="lang-lua">local exosite = require(&#39;https://lualib.webscript.io/exosite-lua-js.lua&#39;)
+local json = require(&quot;https://lualib.webscript.io/dkjson.lua&quot;)
+
+-- create client through CIK Fountain
+local status, cik = exosite.get_temporary_cik()
+print(&quot;USE THIS CIK: &quot; .. cik)
+print(status, cik)
+
+-- create dataport
+local exo = exosite.rpc:new{cik = cik}
+local status, response = exo:create{
+  &quot;dataport&quot;,
+  {
+    format = &quot;float&quot;,
+    name = &quot;Temperature&quot;,
+    retention = {
+      count = &quot;infinity&quot;,
+      duration = &quot;infinity&quot;
+    }
+  }
+}
+print(status, json.encode(response))
+local rid = response.result
+
+-- map alias to dataport
+local status, response = exo:map{&quot;alias&quot;, rid, &quot;temp&quot;}
+print(status, json.encode(response))
+
+-- write a value to dataport
+local status, response = exo:write{ {alias=&quot;temp&quot;}, 23.3}
+print(status, json.encode(response))
+
+-- read value that was just written, for debugging purposes
+local status, response = exo:read{ {alias=&quot;temp&quot;}, {}}
+print(status, json.encode(response))
+
+-- get info for client, for debugging purposes
+local status, response = exo:info{ {alias=&quot;&quot;}, {}}
+print(status, json.encode(response))
+</code></pre>
+</li>
+<li><p>Press the [Run] button.</p>
+</li>
+<li><p>Find the CIK at the beginning of the log, it will be printed after &quot;USE THIS CIK:&quot;. Copy it and <strong>save this key</strong> in a local document on your computer, this is an auth token to be used with the Exosite platform which you will be using at various times later in this lab.</p>
+<blockquote>
+<p>If you&#39;re curious, this is a lua script that runs within your browser, calling the Exosite <a href="http://docs.exosite.com/rpc">RPC API</a> through a lua library included in the first line. It first creates a new client using the &quot;CIK Fountain&quot;, which is a tool to create a client that will get automatically deleted in 30 minutes, and then creates some resources within that client that you will interact with later in this lab.</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="request-patterns-with-http">Request Patterns with HTTP</h2>
+<h3 id="rest">Rest</h3>
+<p>REST, or Representational State Transfer, is one of the simplest structured patterns that you can use on top of CoAP. This example shows making a REST-like request to Exosite&#39;s device API.</p>
+<ol>
+<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/coap">https://play-dev.exosite.io/coap</a>:</p>
+<pre><code class="lang-json">{
+  &quot;version&quot;: 1,
+  &quot;type&quot;: &quot;CON&quot;,
+  &quot;code&quot;: &quot;GET&quot;,
+  &quot;mid&quot;: 9,
+  &quot;token&quot;: [76,2203],
+  &quot;opts&quot;: {
+    &quot;UriPath&quot;: [
+      &quot;1a&quot;,
+      &quot;temp&quot;
+    ],
+    &quot;UriQuery&quot;: [
+      &quot;&lt;CIK&gt;&quot;
+    ],
+    &quot;Observe&quot;:0
+  }
+}
+</code></pre>
+<blockquote>
+<p>Note:  Again, there are two blank lines after the text in the above example are important, make sure they are included after you paste into the <code>http terminal</code> page. And make sure to replace <code>&lt;CIK&gt;</code> with the CIK you generated earlier.</p>
+</blockquote>
+</li>
+<li><p>Press the [Send] button.</p>
+</li>
+</ol>
+<h3 id="rpc">RPC</h3>
+<p>RPC, or Remote Procedure Call, is another communication pattern that can be built on top of HTTP</p>
+<ol>
+<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/coap">https://play-dev.exosite.io/coap</a>:</p>
+<pre><code class="lang-json">{
+    &quot;version&quot;: 1,
+    &quot;type&quot;: &quot;CON&quot;,
+    &quot;code&quot;: &quot;POST&quot;,
+    &quot;mid&quot;: 163,
+    &quot;token&quot;: [9],
+    &quot;opts&quot;: {
+        &quot;UriPath&quot;: [
+            &quot;rpc&quot;
+        ],
+        &quot;ContentFormat&quot;: 60,
+        &quot;Accept&quot;: 60
+    },
+    &quot;payload&quot;: {
+       &quot;auth&quot;: {
+           &quot;cik&quot;: &quot;&lt;CIK&gt;&quot;
+       },
+       &quot;calls&quot;: [
+           {
+               &quot;procedure&quot;: &quot;read&quot;,
+               &quot;arguments&quot;: [
+                   {&quot;alias&quot;: &quot;temp&quot;},
+                   {}
+               ],
+               &quot;id&quot;: 1
+           }
+       ]
+   }
+}
+</code></pre>
+<blockquote>
+<p>Note:  There is a bit of extra magic going on here. This request has it&#39;s Content-Format set to &#39;60&#39; this is the Content-Format for <a href="http://cbor.io">CBOR</a>, a binary encoding format for JSON-like data structures. The CoAP Terminal will automatically encode an object-type payload into cbor when the Content-Format is set to application/cbor (60). It will also decode anything that looks like cbor into an object to be shown as JSON in the friendly format.</p>
+</blockquote>
+</li>
+<li><p>Press the [Send] button.</p>
+</li>
+</ol>
+<h3 id="observe">Observe</h3>
+<p>CoAP <em>does</em> have an official method for pushing notifications from the server to the client. CoAP has a pattern that it calls &quot;Observe&quot;. A CoAP client can request to &#39;observe&#39; a resource. This tells the server to send a notification to the client any time that resource changes. CoAP is able to do this since it is a message-based protocol that does not depend on always being request-response for the purpose of matching requests to responses.</p>
+<ol>
+<li><p>Copy and Paste the Following into the request box on <a href="https://play-dev.exosite.io/coap">https://play-dev.exosite.io/coap</a>:</p>
+<pre><code class="lang-json">{
+  &quot;version&quot;: 1,
+  &quot;type&quot;: &quot;CON&quot;,
+  &quot;code&quot;: &quot;GET&quot;,
+  &quot;mid&quot;: 55,
+  &quot;token&quot;: [45,203],
+  &quot;opts&quot;: {
+    &quot;UriPath&quot;: [
+      &quot;1a&quot;,
+      &quot;temp&quot;
+    ],
+    &quot;UriQuery&quot;: [
+      &quot;&lt;CIK&gt;&quot;
+    ],
+    &quot;Observe&quot;:0
+  }
+}
+</code></pre>
+</li>
+<li><p><strong>Check the &quot;Enable Auto Ack&quot; Checkbox</strong></p>
+</li>
+<li><p>Press the [Send] button.</p>
+<blockquote>
+<p>You&#39;re now observing the &quot;temp&quot; dataport any updates to temp will be pushed to your session in real time.</p>
+</blockquote>
+</li>
+<li><p>Open a second <a href="https://play-dev.exosite.io/coap">CoAP terminal window</a> and run the following:</p>
+<pre><code class="lang-json">{
+  &quot;version&quot;: 1,
+  &quot;type&quot;: &quot;CON&quot;,
+  &quot;code&quot;: &quot;POST&quot;,
+  &quot;mid&quot;: 92,
+  &quot;token&quot;: [54,8],
+  &quot;opts&quot;: {
+    &quot;UriPath&quot;: [
+      &quot;1a&quot;,
+      &quot;temp&quot;
+    ],
+    &quot;UriQuery&quot;: [
+      &quot;&lt;CIK&gt;&quot;
+    ]
+  },
+  &quot;payload&quot;: &quot;-40&quot;
+}
+</code></pre>
+<blockquote>
+<p>This performs a write, as soon as you press [Send] on this request you should get a notification in the original window telling you that the &#39;temp&#39; is now -40.</p>
+</blockquote>
+</li>
+<li><p>TAKE IT FURTHER: Try sharing your CIK with a neighbor. While one of you is subscribed have the other write a value to the dataport. You can also try using HTTP to write to the dataport.</p>
+</li>
+</ol>
+
+</article>
+</body>
+</html>
