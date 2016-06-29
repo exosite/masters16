@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+
+  <title>IoT4/20070 - MASTERS 2016</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon.png">
+
+  <!-- Style -->
+  <link  href='/masters16/assets/github-markdown.css' rel='stylesheet'>
+  <link href='/masters16/assets/style.css' rel='stylesheet'>
+</head>
+<body>
+<article class="markdown-body">
+<h1 id="lab-3-adding-a-real-sensor">Lab 3 - Adding a Real Sensor</h1>
+<p>Now that you&#39;ve gotten familiar with where some of the pieces of applications built on the ExositeReady SDK are found, we&#39;re going to go through adding some new hardware to show you how to integrate other sensors or devices into an ExositeReady SDK application.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>PIC32MZ Embedded Connectivity Starter Kit</li>
+<li>Weather Click Board</li>
+<li>OLED Click Board</li>
+<li>Adapter Board</li>
+<li>An Internet Connection</li>
+<li>A Computer with MPLAB IDE, including:<ul>
+<li>MPLABX IDE v 3.30</li>
+<li>Harmony v1.08</li>
+<li>XC32 v1.40b</li>
+</ul>
+</li>
+<li>The ExositeReady SDK, plus<ul>
+<li>The PIC32MZECSK port &amp; example application</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>The software requirements for this lab are the same as the first lab. If you have not completed that lab yet, it&#39;s <strong>highly</strong> recommend you do so before starting this lab.</p>
+</blockquote>
+<h1 id="the-plan">The Plan</h1>
+<p>You&#39;ve been provided with a couple of mikrobus click boards, one containing a &#39;weather&#39; (temperature, pressure, and humidity) and one containing an OLED display. In this lab we&#39;re going to add support for reading the temperature sensor and reporting the values from it in real time out to the Exosite platform for display in your web browser.</p>
+<p>TBC</p>
+<h2 id="bonus-points">Bonus Points</h2>
+<h3 id="data-use-efficiency">Data Use Efficiency</h3>
+<p>Make the device use data more efficiently, you should implement an algorithm to only update the value written to the platform if there is a not-insignificant change in the value of the temperature.</p>
+<blockquote>
+<p>Note: in the real world you should make your algorithm report at some minimal interval just to make sure you have a way to determine if any of your devices have died or lost their connection.</p>
+</blockquote>
+
+</article>
+</body>
+</html>
