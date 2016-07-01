@@ -23,21 +23,21 @@ In this lab you'll go through getting the PIC32MZ Embedded Connectivity Starter 
 * The ExositeReady SDK, plus
   * The PIC32MZECSK port & example application
 
-If you don't have any of the above software installed, see Tool Setup section before proceeding with this Lab. MASTERS attendees that have access to the in-class lab computers will have this setup already.
+If you don't have any of the above software installed, see the [Lab Setup Guide](../setup) before proceeding with this Lab. MASTERS attendees that have access to the in-class lab computers should have everything setup already.
 
 # Let's Go
 
 First you'll want to open MPLAB X.
 
-![MPLABX IDE Screenshot](/images/mplabx.png)
+![MPLABX IDE Screenshot](../images/mplabx.png)
 
-And open the `exositeready_pic32mz` project, which can be found in the "C:\microchip\harmony\v1_08\apps\exositeready_pic32mz\firmware" folder.
+And open the `er_vfp_microchip_harmony` project, which can be found in the "C:\microchip\harmony\v1_08\apps\er_vfp_microchip_harmony\firmware" folder.
 
-![Open Example Project](/images/open_example_project.png)
+![Open Example Project](../images/open_example_project.png)
 
 You can now explore the source of this project if you'd like.
 
-![Example Project Fresh](/images/example_project_fresh.png)
+![Example Project Fresh](../images/example_project_fresh.png)
 
 ## Running the Example
 
@@ -45,21 +45,19 @@ Before we dig into what the code is doing, let's build, flash, and run the provi
 
 Connect the Starter Kit board to you computer using both mini USB connectors; one is for the onboard debugger and the other is for access to the serial terminal.
 
-If you have more than one project open in MPLAB, make sure that the `exositeready_pic32mz` project is set as the main project, it's name should appear in the window's title bar, you can do this simply clicking on the project in the 'Projects' tab in the left-side bar.
+If you have more than one project open in MPLAB, make sure that the `er_vfp_microchip_harmony` project is set as the main project, it's name should appear in the window's title bar, you can do this simply clicking on the project in the 'Projects' tab in the left-side bar. Then click the "Make and Program Device Main Project" button to build the firmware image and flash it to the board.
 
-If you have more than one project open, make sure that the `exositeready_pic32mz` project is set as the currently active project. The click the "Make and Program Device Main Project" button.
-
-![Make and Program Device Main Project Button](images/make_and_program_device_main_project_button.png)
+![Make and Program Device Main Project Button](../images/make_and_program_device_main_project_button.png)
 
 You may be prompted to select a different device, this will happen if the starter kit you're using isn't the last one used with this project. MPLAB should offer to switch to the kit that is currently connected to your computer; just click "OK". If you're shown a list of tools, there should only be one valid option. Choose the item listed under "Starter Kits (PKOB)".
 
-![Tool List](images/tool_list.png)
+![Tool List](../images/tool_list.png)
 
 It will take several minutes to compile and flash the board.
 
-Once this is complete, the board will boot the demo application, connect to Exosite's servers, and begin reading & writing data. Once this happens you should see the three LEDs along the 40-pin header turn on.
+Once this is complete, the board will boot the demo application, connect to Exosite's servers, and begin reading & writing data. Once this happens you should see the three LEDs, red, yellow, and green, along the 40-pin header turn on.
 
-To follow the progress of the application booting and connecting you can use a serial terminal application to view the application's debug log. Open the serial terminal application on the computer and connect to the virtual serial port provided by the device, it should be the only one available on your computer.
+To follow the progress of the application booting and connecting, or to troubleshoot any issues, you can use a serial terminal application to view the application's debug log. Open the serial terminal application on the computer and connect to the virtual serial port provided by the device, it should be the only one available on your computer. If you don't see make sure you have a miniUSB cable connecting the port under the Ethernet port.
 
 <!-- NTS: Expand the above section after figuring out what application they will have on these machines. -->
 
@@ -67,6 +65,8 @@ To follow the progress of the application booting and connecting you can use a s
 
 Once the board has booted the application and connected you can control the LEDs and see the status of the buttons through a custom web app that was created specifically for this class.
 
-To find your board, go to https://labui.apps.exosite-dev.io/ and find your board in the list by looking at the MAC address. (Note: You can find you device's MAC address by watching the serial terminal output when you first boot the application.) Select your device and toggle some of the LEDs on and off or press the switches on the board to see the indicators in the webui change.
+To find your board, go to https://labui.apps.exosite-dev.io/ and find your board in the list by looking at the MAC address. (Note: You can find you device's MAC address by watching the serial terminal output when you first boot the application.) Select your device and toggle some of the LEDs on and off or press SW1 or SW2 (next to the red and orange LEDs) on the board to see the "count" in the webui change.
 
-> Note: I would suggest leaving this project open, lab 2 will pickup where this one left off.
+<!-- NTS: The above URL will have to change when the app gets pushed to production next week. -->
+
+> Note: I would suggest leaving MPLAB and this project open, lab 2 will pickup right where this one is leaving off.
