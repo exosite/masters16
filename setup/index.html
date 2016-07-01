@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+
+  <title>IoT4/20070 - MASTERS 2016</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon.png">
+
+  <!-- Style -->
+  <link  href='/masters16/assets/github-markdown.css' rel='stylesheet'>
+  <link href='/masters16/assets/style.css' rel='stylesheet'>
+</head>
+<body>
+<article class="markdown-body">
+<p>This document will walk you through installing the ExositeReady SDK&#39;s example application for the PIC32MZ Embedded Connectivity Starter Kit.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Make sure you have the following software from Microchip already installed:</p>
+<ul>
+<li>MPLAB X (tested with v3.30)</li>
+<li>Harmony (tested with v1.08)</li>
+<li>XC32 (tested with v1.40)</li>
+</ul>
+<p>You will also need to have <a href="https://git-scm.com/">Git SCM</a> (or any git access tool, but you&#39;re on your own if you use something else).</p>
+<h2 id="installing-the-example">Installing the Example</h2>
+<ol>
+<li>Open a terminal or cmd prompt.</li>
+<li>Navigate to the &quot;apps&quot; directory within the version of harmony you&#39;ll be using.</li>
+<li><p>Clone the repository to the current folder.</p>
+<pre><code>git clone https://github.com/exositeready/er_vfp_microchip_harmony.git
+</code></pre></li>
+<li><p>Navigate into the newly created <code>er_vfp_microchip_harmony</code> folder.</p>
+</li>
+<li><p>Initialize and update all submodules recursively.</p>
+<pre><code>git submodule update --init --recursive
+</code></pre></li>
+</ol>
+<p>The example application, including the ExositeReady SDK, is now fully installed and ready to use.</p>
+
+</article>
+</body>
+</html>
