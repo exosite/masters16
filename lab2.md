@@ -73,6 +73,10 @@ Second, to change the handling of the button, we'll leave most of the code that 
 
 Now compile and flash you changes. Once this has finished and your board has rebooted and re-connected you should be able to press SW1 to turn "party mode" on and see the LEDs flash randomly, changing approximately once every second.
 
+## Bonus Points
+
+TBC
+
 ## End of Lab 2
 
 You've now completed this, somewhat contrived, example. Hopefully you've learned more about some of the specifics about how the ExositeReady SDK works. In the next and final lab of this class we will go through a more complex example that will add new sensors and a display to show you how to integrate other hardware into and ER SDK application.
