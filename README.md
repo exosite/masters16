@@ -11,14 +11,14 @@ This site hosts the labs for the IoT4 - 20070 class at Microchip MASTERS 2016. U
 
 * [Lab 1](./lab1)
 * [Lab 2](./lab2)
-* <s>[Lab 3](./lab3)</s>
+* [Lab 3](./lab3)
 
 ## Optional Labs & Guides
 
-* <s>[Lab Setup Guide](./setup)</s>
+* [Lab Setup Guide](./setup)
 * <s>[Lab 4 - Murano](./lab4)</s>
-* <s>[CoAP Lab](./coap)</s>
-* <s>[HTTP Lab](./http)</s>
+* <s>[Lab 5 - HTTP Lab](./http)</s>
+* <s>[Lab 6 - CoAP Lab](./coap)</s>
 
 
 ## Class Chat
