@@ -39,14 +39,19 @@
 <blockquote>
 <p>The software requirements for this lab are the same as the first lab. If you have not completed that lab yet, it&#39;s <strong>highly</strong> recommend you do so before starting this lab.</p>
 </blockquote>
-<h1 id="the-plan">The Plan</h1>
+<h2 id="the-plan">The Plan</h2>
 <p>You&#39;ve been provided with a couple of mikrobus click boards, one containing a &#39;weather&#39; (temperature, pressure, and humidity) and one containing an OLED display. In this lab we&#39;re going to add support for reading the temperature sensor and reporting the values from it in real time out to the Exosite platform for display in your web browser.</p>
+<p>To change this we&#39;ll need to remove all the code that handles the LEDs and buttons and replace it with code that handles talking I2C to the <a href="https://www.bosch-sensortec.com/bst/products/all_products/bme280">BME280</a> temperature/pressure/humidity sensor and SPI to the controller for the OLED display.</p>
+<blockquote>
+<p>Note: If you get stuck at any point during this tutorial, you can run <code>git diff origin/click_demo {filename}</code> to compare your current file to what we&#39;re going for. For example to compare your app.c file to my end result, run <code>git diff origin/click_shield_demo firmware/src/app.c</code> from the <code>er_vfp_microchip_harmony</code> folder.</p>
+</blockquote>
+<h2 id="let-s-go">Let&#39;s Go</h2>
 <p>TBC</p>
 <h2 id="bonus-points">Bonus Points</h2>
 <h3 id="data-use-efficiency">Data Use Efficiency</h3>
 <p>Make the device use data more efficiently, you should implement an algorithm to only update the value written to the platform if there is a not-insignificant change in the value of the temperature.</p>
 <blockquote>
-<p>Note: in the real world you should make your algorithm report at some minimal interval just to make sure you have a way to determine if any of your devices have died or lost their connection.</p>
+<p>Note: in the real world you should make your algorithm report at some minimal interval just to make sure you have a way to determine if any of your devices have died or lost their connection. It&#39;s up to you if you&#39;d like to do that here.</p>
 </blockquote>
 
 </article>

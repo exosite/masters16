@@ -65,6 +65,8 @@
 <p>First, for the changes to the LEDs you simply need to change any instance of the string &quot;leds&quot; to &quot;party_leds&quot;. Make sure to change them in both the &quot;APP_APPLICATION&quot; and &quot;APP_CREATE_SUBSCRIPTIONS&quot; states of the main <code>APP_Tasks</code> function as well as in the <code>on_read</code> and <code>on_change</code> functions.</p>
 <p>Second, to change the handling of the button, we&#39;ll leave most of the code that handles that alone again and just change the dataport to which it&#39;s written. Again, you&#39;ll need to change any instance of the string &quot;count&quot; to &quot;party_on_off&quot;. You&#39;ll need to make this change in the &quot;APP_APPLICATION&quot; state of the main <code>APP_Tasks</code> function and the <code>on_read</code> function.</p>
 <p>Now compile and flash you changes. Once this has finished and your board has rebooted and re-connected you should be able to press SW1 to turn &quot;party mode&quot; on and see the LEDs flash randomly, changing approximately once every second.</p>
+<h2 id="bonus-points">Bonus Points</h2>
+<p>TBC</p>
 <h2 id="end-of-lab-2">End of Lab 2</h2>
 <p>You&#39;ve now completed this, somewhat contrived, example. Hopefully you&#39;ve learned more about some of the specifics about how the ExositeReady SDK works. In the next and final lab of this class we will go through a more complex example that will add new sensors and a display to show you how to integrate other hardware into and ER SDK application.</p>
 
