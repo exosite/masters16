@@ -38,29 +38,35 @@
 </blockquote>
 <h1 id="exploring-the-code">Exploring the Code</h1>
 <p>We&#39;ll start of in the source for the main application code which you can find in <code>Source File -&gt; app -&gt; app.c</code>. In this file you&#39;ll find the main <code>APP_TASKS</code> function that should be familiar to you if you&#39;ve ever written firmware using Microchip&#39;s Harmony libraries before.</p>
+<p><img src="../images/example_project_fresh.png" alt="Example Project Fresh"></p>
 <p>If you&#39;re not familiar with this application structure, you&#39;ll see that the application is structured as a state machine where the APP_TASKS function returns when it is done with it&#39;s current task, keeping track of the application&#39;s state in the appData global variable structure. The main body of the function takes the form of a single switch statement with each case being an individual state of the state machine.</p>
 <blockquote>
 <p>Try to follow the state through the application and understand the basic progression of the state machine.</p>
 </blockquote>
+<p><img src="../images/app_main_state_machine.png" alt="App Main State Machine"></p>
 <p>In this application the app will spend most of it&#39;s time in the <code>APP_APPLICATION</code> state. This is where all the interaction with the Exosite platform is controlled.</p>
-<p>Here you can see that we&#39;re writing some data based on the state of the buttons; this state is being written to a dataport with the alias &quot;btn&quot;, it&#39;s simply a numeric value that indicates which button is pressed.</p>
+<p><img src="../images/app_application_state.png" alt="App Application State"></p>
+<p>Here you can see that we&#39;re reading a couple of dataports, &quot;leds&quot; and &quot;count&quot;. &quot;leds&quot; is pretty obvious, it&#39; reads a value that sets which LEDs are on and which are off. &quot;count&quot; is simply a numeric value that we can change with SW1 and SW2, this initial read is just to sync the previous value from the cloud.</p>
+<p>&quot;count&quot; is also written back up to the cloud anytime the value changes in the next section.</p>
 <blockquote>
-<p>Take note that the numeric value of the button press is converted to ASCII text. All requests that are sent to the API this demo uses require the messages to be UTF-8 encoded (of which ASCII is a subset, if you didn&#39;t know) so this library requires you to format all your requests before handing them off. It&#39;s done this way to simplify the communication protocols, using only standard web protocols and formats.</p>
+<p>The <code>exosite_read</code> call in this state for &quot;leds&quot; should actually never be called, see if you can figure out why.</p>
 </blockquote>
-<p>You will also see some code for reading the state for displaying on the LEDs from the &#39;leds&#39; dataport, this is again a numeric value that encoded the state of each LED. It uses a simplistic encoding, see if you can figure out what it is.</p>
-<blockquote>
-<p>This way of encoding multiple independent inputs and outputs is done to reduce the resources required to communicate the data to the platform. You could split each LED and button into their own dataport, but that would require writing to multiple dataports and, more importantly, opening several connections to the platform to wait on changes to each dataport. This is largely a limitation of the API used by this library, Exosite has new device-side APIs that will get rid of this limitation.</p>
-</blockquote>
+<p>See that we first call <code>exosite_subscribe</code> and do an initial call to <code>exosite_read</code> before the main application state is entered. Also, note that we&#39;re doing both a read and a subscribe, a subscribe call only will receive changes that are made in the future, it will not receive a value for the current state.</p>
+<p><img src="../images/app_create_subscriptions_state.png" alt="App Create Subscriptions State"></p>
+<p>If you look at the <code>on_read</code> call as well as the code to write to the &quot;count&quot; dataport you&#39;ll see that the numeric values of the count and leds state are converted to ASCII text. All requests that are sent to the API this demo uses require the messages to be UTF-8 encoded (of which ASCII is a subset, if you didn&#39;t know) so this library requires you to format all your requests before handing them off. It&#39;s done this way to simplify the communication protocols, using only standard web protocols and formats.</p>
+<p>You may also note that we&#39;re only using a single dataport to encode the state of all of the LEDs. This way of encoding multiple independent inputs and outputs is done to reduce the resources required to communicate the data to the platform. You could split each LED and button into their own dataport, but that would require writing to multiple dataports and, more importantly, opening several connections to the platform to wait on changes to each dataport. This is partially a limitation of the API used by this library, Exosite has new device-side APIs that will get rid of this limitation.</p>
+<p><img src="../images/on_read_function.png" alt="on_read Function"></p>
 <h1 id="making-some-tweaks">Making some Tweaks</h1>
-<p>The &#39;Product&#39; model that is being used for these demos has a few more dataports we didn&#39;t use in the first lab. We want to read the <code>party_leds</code> dataport and use that value to set the state of the LEDs. We&#39;ll also want to make the buttons change the value in the <code>party_on_off</code> dataport.</p>
-<p>The <code>party_leds</code> dataport uses the same format as the <code>leds</code> dataport. The <code>party_on_off</code> dataport takes either a &quot;1&quot; or a &quot;0&quot;.</p>
+<p>The &#39;Product&#39; model that is being used for these demos has a few more dataports that aren&#39;t being used in the example application, let&#39;s make some really simple modifications to use them. We want to change to to reading the <code>party_leds</code> dataport to set the state of the LEDs. We&#39;ll also want to make the buttons change the value in the <code>party_on_off</code> dataport.</p>
+<p>The <code>party_leds</code> dataport uses the same format as the <code>leds</code> dataport. The <code>party_on_off</code> the same format as <code>count</code>, where &quot;0&quot; mean &quot;off&quot; and anything else means &quot;on&quot;.</p>
 <p>Before continuing to read the lab, try to see if you can make the changes to use these dataports instead of the ones included in the original example. If you&#39;re having trouble the following section will walk you through the steps needed.</p>
 <h2 id="the-walkthrough">The Walkthrough</h2>
-<blockquote>
-<p>tbc.</p>
-</blockquote>
-<h2 id="bonus-points">Bonus Points</h2>
-<p>There&#39;s a limit to how large of a number you can write to numeric value dataports, see if you can figure out what it is.</p>
+<p>Both of these changes should be fairly trivial, but here is a step-by-step walkthrough of the changes in case you missed anything.</p>
+<p>First, for the changes to the LEDs you simply need to change any instance of the string &quot;leds&quot; to &quot;party_leds&quot;. Make sure to change them in both the &quot;APP_APPLICATION&quot; and &quot;APP_CREATE_SUBSCRIPTIONS&quot; states of the main <code>APP_Tasks</code> function as well as in the <code>on_read</code> and <code>on_change</code> functions.</p>
+<p>Second, to change the handling of the button, we&#39;ll leave most of the code that handles that alone again and just change the dataport to which it&#39;s written. Again, you&#39;ll need to change any instance of the string &quot;count&quot; to &quot;party_on_off&quot;. You&#39;ll need to make this change in the &quot;APP_APPLICATION&quot; state of the main <code>APP_Tasks</code> function and the <code>on_read</code> function.</p>
+<p>Now compile and flash you changes. Once this has finished and your board has rebooted and re-connected you should be able to press SW1 to turn &quot;party mode&quot; on and see the LEDs flash randomly, changing approximately once every second.</p>
+<h2 id="end-of-lab-2">End of Lab 2</h2>
+<p>You&#39;ve now completed this, somewhat contrived, example. Hopefully you&#39;ve learned more about some of the specifics about how the ExositeReady SDK works. In the next and final lab of this class we will go through a more complex example that will add new sensors and a display to show you how to integrate other hardware into and ER SDK application.</p>
 
 </article>
 </body>
