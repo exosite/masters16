@@ -43,11 +43,107 @@
 <p>You&#39;ve been provided with a couple of mikrobus click boards, one containing a &#39;weather&#39; (temperature, pressure, and humidity) and one containing an OLED display. In this lab we&#39;re going to add support for reading the temperature sensor and reporting the values from it in real time out to the Exosite platform for display in your web browser.</p>
 <p>To change this we&#39;ll need to remove all the code that handles the LEDs and buttons and replace it with code that handles talking I2C to the <a href="https://www.bosch-sensortec.com/bst/products/all_products/bme280">BME280</a> temperature/pressure/humidity sensor and SPI to the controller for the OLED display.</p>
 <blockquote>
-<p>Note: If you get stuck at any point during this tutorial, you can run <code>git diff origin/click_demo {filename}</code> to compare your current file to what we&#39;re going for. For example to compare your app.c file to my end result, run <code>git diff origin/click_shield_demo firmware/src/app.c</code> from the <code>er_vfp_microchip_harmony</code> folder.</p>
+<p>Note: If you get stuck at any point during this tutorial, you can run <code>git diff origin/click_demo {filename}</code> to compare your current file to what we&#39;re going for. For example to compare your app.c file to my end result, run <code>git diff origin/click_shield_demo firmware/src/app.c</code> from the <code>er_vfp_microchip_harmony</code> folder. The output of the full project diff is available <a href="../files/lab3_changes.patch">here</a> if you don&#39;t know how to use git.</p>
 </blockquote>
 <h2 id="let-s-go">Let&#39;s Go</h2>
-<p>TBC</p>
+<p>The biggest, and easiest, changes will be the removal of the file containing the bulk of the code controlling the switches and the addition of the files containing the bulk of the code controlling the weather sensor and display, let&#39;s start with that.</p>
+<p>If you haven&#39;t yet, download the <a href="../files/files.zip">files.zip</a> file, then extract the files and copy the .c and .h files (one each for &quot;display_ctrl&quot; and &quot;sensor&quot;) to the <code>er_vfp_microchip_harmony/firemware/src</code> directory.</p>
+<p>Next, in MPLAB, remove &quot;switch_control.c&quot; from the project (right-click menu). Then add both &quot;sensor.c&quot; and &quot;display_ctrl.c&quot; to the project, I like to put them in the &quot;app&quot; group, do this by right-clicking on &quot;app&quot; under &quot;Source Files&quot; and choosing &quot;Add Existing Item&quot;.</p>
+<p><img src="../images/right_click_menu_on_app.png" alt="Right Click Menu on App"></p>
+<p>You&#39;ll also want to copy over the system config folder from the zip file, also into the <code>er_vfp_microchip_harmony/firemware/src</code> directory, these files change what tasks our RTOS is running. The changes made a fairly straightforward, but as configuring and RTOS is outside the scope of the class we&#39;ll just copy the files for the sake of time. Feel free to find the changes or read the diff linked above.</p>
+<p>Next we&#39;ll start modifying the app.c source itself. Near the top of the file, on line 112, we&#39;ll no longer need the global counter variable, you can remove it:</p>
+<pre><code class="lang-c">int gCounter
+</code></pre>
+<p>While we&#39;re here, lets add some <code>extern</code>s for a couple of functions the application will be using:</p>
+<pre><code class="lang-c">extern int getTemperature(void);
+extern int getHumidity(void);
+</code></pre>
+<p>Next, find the &#39;on_read&#39; function, remove all the existing code from inside it, except the <code>SYS_CONSOLE_PRINT</code> call, which is still going to be useful for debugging and refill it with the following code:</p>
+<pre><code class="lang-c">if (status == ERR_SUCCESS) {
+  if(!strcmp(&quot;display&quot;, alias)) {
+    display_print_remote_msg(value);
+    appData.remote_msg_initialized = INITIALIZED;
+  }
+} else {
+  /* In case of error, the reading will be repeated */
+  appData.remote_msg_initialized = NOT_INITIALIZED;
+}
+</code></pre>
+<p>Do the same thing in &#39;on_change&#39;:</p>
+<pre><code class="lang-c">ASSERT(!strcmp(&quot;display&quot;, alias));
+
+if (status == ERR_SUCCESS) {
+  appData.remote_msg_initialized = INITIALIZED;
+  printf(&quot;Value changed on server \&quot;%s\&quot; to %s\n&quot;, alias, value);
+  display_print_remote_msg(value);
+}
+</code></pre>
+<p>The &#39;on_write&#39; function will stay the same since it&#39;s only got a debug output message in it.</p>
+<p>Next, we&#39;ll move to the &#39;APP_Initialize&#39; function where you&#39;ll replace</p>
+<pre><code class="lang-c">appData.leds_initialized = NOT_INITIALIZED;
+appData.counter_initialized = NOT_INITIALIZED;
+</code></pre>
+<p>with </p>
+<pre><code class="lang-c">appData.remote_msg_initialized = NOT_INITIALIZED;
+</code></pre>
+<p>Now, getting to &quot;APP_Tasks&quot;, where the largest number of changes need to be made, near the beginning of the function, change the <code>countDiff</code> variable to <code>sensor_val</code> (it should stay an <code>int</code>).</p>
+<p>Next, we want to create a new state that waits for the display to finish initializing itself. I&#39;ve chosen to put this between the states &quot;APP_TCPIP_WAIT_FOR_IP&quot; and &quot;APP_ER_SDK_INIT&quot;. Here is the new state as I&#39;ve created it: </p>
+<pre><code class="lang-c">case APP_DISPLAY_INIT:
+  if(!is_display_ready())
+    break;
+
+  SYS_CONSOLE_MESSAGE(&quot; Display initialized\r\n&quot;);
+
+  if (display_print_sn()!= ERR_SUCCESS) {
+    appData.state = APP_PLATFORM_ERROR;
+    break;
+  }
+
+  appData.state = APP_ER_SDK_INIT;
+  break;
+</code></pre>
+<p>You&#39;ll then also need to make sure to change the previous state&#39;s setting of the next state, if you put your state in the same location as I did that means changing <code>appData.state = APP_ER_SDK_INIT;</code> to:</p>
+<pre><code class="lang-c">appData.state = APP_DISPLAY_INIT;
+</code></pre>
+<p>In the &quot;APP_CREATE_SUBSCRIPTIONS&quot; state we&#39;ll want to change the name of the dataport that we&#39;re subscribed to. Simply change the string <code>&quot;leds&quot;</code> to <code>&quot;display&quot;</code> in both the subscribe and read functions.</p>
+<p>In the same piece of code, change <code>appData.leds_initialized = IN_PROGRESS;</code> to: <code>appData.remote_msg_initialized = IN_PROGRESS;</code></p>
+<p>You&#39;ll want it to look like:</p>
+<pre><code class="lang-c">if(exosite_subscribe(exo, &quot;display&quot;, 0, on_change) == ERR_SUCCESS) {
+  appData.remote_msg_initialized = IN_PROGRESS;
+  exosite_read(exo, &quot;display&quot;, on_read);
+  appData.state = APP_APPLICATION;
+}
+</code></pre>
+<p>In the next state, &quot;APP_APPLICATION&quot;, we&#39;ll do exactly the same things for the read calls. That should now look like:</p>
+<pre><code class="lang-c">if (appData.remote_msg_initialized == NOT_INITIALIZED) {
+  appData.remote_msg_initialized = IN_PROGRESS;
+  exosite_read(exo, &quot;display&quot;, on_read);
+}
+</code></pre>
+<p>The following couple blocks of code, the code that reads from and writes to the &quot;count&quot; dataport should simply be deleted.</p>
+<p>We&#39;ll replace it with code to write to the &quot;temperature&quot; dataport:</p>
+<pre><code class="lang-c">sensor_val = getTemperature();
+sprintf(str, &quot;%d.%01dC&quot;, (sensor_val/100),(sensor_val%100)/10);
+SYS_CONSOLE_PRINT(&quot;Temperature: %s\r\n&quot;, str);
+exosite_write(exo, &quot;temperature&quot;, str, on_write);
+</code></pre>
+<p>That&#39;s finally everything for app.c.</p>
+<p>We did change the names of some of the items that are defined in app.h. So open &quot;Header Files&quot; -&gt; &quot;app&quot; -&gt; &quot;app.h&quot;.</p>
+<p>First we need to add a &quot;APP_DISPLAY_INIT&quot; state to the &quot;APP_STATES&quot; enum. Second, we need to update the &quot;APP_DATA&quot; struct. Currently the annonomus enum defines two fields of the struct, &quot;leds_initialized&quot; and &quot;counter_initialized&quot;. Remove both of those and replace it with a single field named &quot;remote_msg_initialized&quot;. You should now have: </p>
+<pre><code class="lang-c">enum { NOT_INITIALIZED = 0, IN_PROGRESS, INITIALIZED } remote_msg_initialized;
+</code></pre>
+<p>We&#39;ve now re-configured everything to use our new sensor, reading the temperature, and our new display, to display messages read from the platform. There is, however, one last change I&#39;ve saved for last. Our device is still identifying itself as the same type of device we used in the first two labs, but we&#39;re now expecting an entirely different set dataports for reading from and writing to. I&#39;ve created a second product for our new weather sensor device to use, it has a product ID of &quot;<TBD>&quot;, you need to change this in app.c. Near the beginning of &quot;APP_Tasks&quot; there&#39;s two variables <code>vendor</code> and <code>model</code>, set both of these to &quot;<TBD>&quot;. You should now have:</p>
+<pre><code class="lang-c">char *vendor = &quot;&lt;TBD&gt;&quot;;
+char *model = &quot;&lt;TBD&gt;&quot;;
+</code></pre>
+<p>Now, that&#39;s all! Make sure you&#39;ve saved all the files.</p>
+<p>Since we changed some files outside MPLAB I&#39;d suggest doing a clean build just to make sure all our changes are compiled in. Then program the new firmware to the device</p>
+<p><img src="../images/clean_build_button.png" alt="Clean Build Button"></p>
+<h2 id="using-your-new-creation">Using your New Creation</h2>
+<p>I&#39;ve created another web UI that is associated with this new product ID, you can now see your new creation through <a href="https://weathersensor.apps.exosite.io">https://weathersensor.apps.exosite.io</a>.</p>
 <h2 id="bonus-points">Bonus Points</h2>
+<h3 id="humidity">Humidity</h3>
+<p>The libraries you included also have a <code>getHumidity()</code>function, see if you can figure out how to write this to the &quot;humidity&quot; dataport that is also part of the client model you&#39;re using. Use the code that writes the temperature as a template.</p>
 <h3 id="data-use-efficiency">Data Use Efficiency</h3>
 <p>Make the device use data more efficiently, you should implement an algorithm to only update the value written to the platform if there is a not-insignificant change in the value of the temperature.</p>
 <blockquote>
