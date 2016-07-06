@@ -32,13 +32,166 @@ You've been provided with a couple of mikrobus click boards, one containing a 'w
 
 To change this we'll need to remove all the code that handles the LEDs and buttons and replace it with code that handles talking I2C to the [BME280](https://www.bosch-sensortec.com/bst/products/all_products/bme280) temperature/pressure/humidity sensor and SPI to the controller for the OLED display.
 
-> Note: If you get stuck at any point during this tutorial, you can run `git diff origin/click_demo {filename}` to compare your current file to what we're going for. For example to compare your app.c file to my end result, run `git diff origin/click_shield_demo firmware/src/app.c` from the `er_vfp_microchip_harmony` folder.
+> Note: If you get stuck at any point during this tutorial, you can run `git diff origin/click_demo {filename}` to compare your current file to what we're going for. For example to compare your app.c file to my end result, run `git diff origin/click_shield_demo firmware/src/app.c` from the `er_vfp_microchip_harmony` folder. The output of the full project diff is available [here](../files/lab3_changes.patch) if you don't know how to use git.
 
 ## Let's Go
 
-TBC
+The biggest, and easiest, changes will be the removal of the file containing the bulk of the code controlling the switches and the addition of the files containing the bulk of the code controlling the weather sensor and display, let's start with that.
+
+If you haven't yet, download the [files.zip](../files/files.zip) file, then extract the files and copy the .c and .h files (one each for "display_ctrl" and "sensor") to the `er_vfp_microchip_harmony/firemware/src` directory.
+
+Next, in MPLAB, remove "switch_control.c" from the project (right-click menu). Then add both "sensor.c" and "display_ctrl.c" to the project, I like to put them in the "app" group, do this by right-clicking on "app" under "Source Files" and choosing "Add Existing Item".
+
+![Right Click Menu on App](../images/right_click_menu_on_app.png)
+
+You'll also want to copy over the system config folder from the zip file, also into the `er_vfp_microchip_harmony/firemware/src` directory, these files change what tasks our RTOS is running. The changes made a fairly straightforward, but as configuring and RTOS is outside the scope of the class we'll just copy the files for the sake of time. Feel free to find the changes or read the diff linked above.
+
+Next we'll start modifying the app.c source itself. Near the top of the file, on line 112, we'll no longer need the global counter variable, you can remove it:
+
+```c
+int gCounter
+```
+
+While we're here, lets add some `extern`s for a couple of functions the application will be using:
+
+```c
+extern int getTemperature(void);
+extern int getHumidity(void);
+```
+
+Next, find the 'on_read' function, remove all the existing code from inside it, except the `SYS_CONSOLE_PRINT` call, which is still going to be useful for debugging and refill it with the following code:
+
+```c
+if (status == ERR_SUCCESS) {
+  if(!strcmp("display", alias)) {
+    display_print_remote_msg(value);
+    appData.remote_msg_initialized = INITIALIZED;
+  }
+} else {
+  /* In case of error, the reading will be repeated */
+  appData.remote_msg_initialized = NOT_INITIALIZED;
+}
+```
+
+Do the same thing in 'on_change':
+
+```c
+ASSERT(!strcmp("display", alias));
+
+if (status == ERR_SUCCESS) {
+  appData.remote_msg_initialized = INITIALIZED;
+  printf("Value changed on server \"%s\" to %s\n", alias, value);
+  display_print_remote_msg(value);
+}
+```
+
+The 'on_write' function will stay the same since it's only got a debug output message in it.
+
+Next, we'll move to the 'APP_Initialize' function where you'll replace
+
+```c
+appData.leds_initialized = NOT_INITIALIZED;
+appData.counter_initialized = NOT_INITIALIZED;
+```
+
+with 
+
+```c
+appData.remote_msg_initialized = NOT_INITIALIZED;
+```
+
+Now, getting to "APP_Tasks", where the largest number of changes need to be made, near the beginning of the function, change the `countDiff` variable to `sensor_val` (it should stay an `int`).
+
+Next, we want to create a new state that waits for the display to finish initializing itself. I've chosen to put this between the states "APP_TCPIP_WAIT_FOR_IP" and "APP_ER_SDK_INIT". Here is the new state as I've created it: 
+
+```c
+case APP_DISPLAY_INIT:
+  if(!is_display_ready())
+    break;
+
+  SYS_CONSOLE_MESSAGE(" Display initialized\r\n");
+
+  if (display_print_sn()!= ERR_SUCCESS) {
+    appData.state = APP_PLATFORM_ERROR;
+    break;
+  }
+
+  appData.state = APP_ER_SDK_INIT;
+  break;
+```
+
+You'll then also need to make sure to change the previous state's setting of the next state, if you put your state in the same location as I did that means changing `appData.state = APP_ER_SDK_INIT;` to:
+
+```c
+appData.state = APP_DISPLAY_INIT;
+```
+
+In the "APP_CREATE_SUBSCRIPTIONS" state we'll want to change the name of the dataport that we're subscribed to. Simply change the string `"leds"` to `"display"` in both the subscribe and read functions.
+
+In the same piece of code, change `appData.leds_initialized = IN_PROGRESS;` to: `appData.remote_msg_initialized = IN_PROGRESS;`
+
+You'll want it to look like:
+
+```c
+if(exosite_subscribe(exo, "display", 0, on_change) == ERR_SUCCESS) {
+  appData.remote_msg_initialized = IN_PROGRESS;
+  exosite_read(exo, "display", on_read);
+  appData.state = APP_APPLICATION;
+}
+```
+
+In the next state, "APP_APPLICATION", we'll do exactly the same things for the read calls. That should now look like:
+
+```c
+if (appData.remote_msg_initialized == NOT_INITIALIZED) {
+  appData.remote_msg_initialized = IN_PROGRESS;
+  exosite_read(exo, "display", on_read);
+}
+```
+
+The following couple blocks of code, the code that reads from and writes to the "count" dataport should simply be deleted.
+
+We'll replace it with code to write to the "temperature" dataport:
+
+```c
+sensor_val = getTemperature();
+sprintf(str, "%d.%01dC", (sensor_val/100),(sensor_val%100)/10);
+SYS_CONSOLE_PRINT("Temperature: %s\r\n", str);
+exosite_write(exo, "temperature", str, on_write);
+```
+
+That's finally everything for app.c.
+
+We did change the names of some of the items that are defined in app.h. So open "Header Files" -> "app" -> "app.h".
+
+First we need to add a "APP_DISPLAY_INIT" state to the "APP_STATES" enum. Second, we need to update the "APP_DATA" struct. Currently the annonomus enum defines two fields of the struct, "leds_initialized" and "counter_initialized". Remove both of those and replace it with a single field named "remote_msg_initialized". You should now have: 
+
+```c
+enum { NOT_INITIALIZED = 0, IN_PROGRESS, INITIALIZED } remote_msg_initialized;
+```
+
+We've now re-configured everything to use our new sensor, reading the temperature, and our new display, to display messages read from the platform. There is, however, one last change I've saved for last. Our device is still identifying itself as the same type of device we used in the first two labs, but we're now expecting an entirely different set dataports for reading from and writing to. I've created a second product for our new weather sensor device to use, it has a product ID of "<TBD>", you need to change this in app.c. Near the beginning of "APP_Tasks" there's two variables `vendor` and `model`, set both of these to "<TBD>". You should now have:
+
+```c
+char *vendor = "<TBD>";
+char *model = "<TBD>";
+```
+
+Now, that's all! Make sure you've saved all the files.
+
+Since we changed some files outside MPLAB I'd suggest doing a clean build just to make sure all our changes are compiled in. Then program the new firmware to the device
+
+![Clean Build Button](../images/clean_build_button.png)
+
+## Using your New Creation
+
+I've created another web UI that is associated with this new product ID, you can now see your new creation through [https://weathersensor.apps.exosite.io](https://weathersensor.apps.exosite.io).
 
 ## Bonus Points
+
+### Humidity
+
+The libraries you included also have a `getHumidity()`function, see if you can figure out how to write this to the "humidity" dataport that is also part of the client model you're using. Use the code that writes the temperature as a template.
 
 ### Data Use Efficiency
 
