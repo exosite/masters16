@@ -50,7 +50,7 @@
 <p>If you haven&#39;t yet, download the <a href="../files/files.zip">files.zip</a> file, then extract the files and copy the .c and .h files (one each for &quot;display_ctrl&quot; and &quot;sensor&quot;) to the <code>er_vfp_microchip_harmony/firemware/src</code> directory.</p>
 <p>Next, in MPLAB, remove &quot;switch_control.c&quot; from the project (right-click menu). Then add both &quot;sensor.c&quot; and &quot;display_ctrl.c&quot; to the project, I like to put them in the &quot;app&quot; group, do this by right-clicking on &quot;app&quot; under &quot;Source Files&quot; and choosing &quot;Add Existing Item&quot;.</p>
 <p><img src="../images/right_click_menu_on_app.png" alt="Right Click Menu on App"></p>
-<p>You&#39;ll also want to copy over the system config folder from the zip file, also into the <code>er_vfp_microchip_harmony/firemware/src</code> directory, these files change what tasks our RTOS is running. The changes made a fairly straightforward, but as configuring and RTOS is outside the scope of the class we&#39;ll just copy the files for the sake of time. Feel free to find the changes or read the diff linked above.</p>
+<p>You&#39;ll also want to copy over the system config folder from the zip file, also into the <code>er_vfp_microchip_harmony/firemware/src</code> directory, these files change what tasks our RTOS is running. The changes made a fairly straightforward, but as configuring and RTOS is outside the scope of the class we&#39;ll just copy the files for the sake of time. Feel free to compare files for changes or read the diff linked above.</p>
 <p>Next we&#39;ll start modifying the app.c source itself. Near the top of the file, on line 112, we&#39;ll no longer need the global counter variable, you can remove it:</p>
 <pre><code class="lang-c">int gCounter
 </code></pre>
@@ -139,11 +139,13 @@ char *model = &quot;&lt;TBD&gt;&quot;;
 <p>Now, that&#39;s all! Make sure you&#39;ve saved all the files.</p>
 <p>Since we changed some files outside MPLAB I&#39;d suggest doing a clean build just to make sure all our changes are compiled in. Then program the new firmware to the device</p>
 <p><img src="../images/clean_build_button.png" alt="Clean Build Button"></p>
+<h2 id="attach-the-hardware">Attach the Hardware</h2>
+<p>If you don&#39;t already have the Click boards attached to the main starter kit board, you should do that now. Slot the two Click boards onto the adapter board, then attach the adapter board to the 40-pin header on the starter kit as shown.</p>
 <h2 id="using-your-new-creation">Using your New Creation</h2>
-<p>I&#39;ve created another web UI that is associated with this new product ID, you can now see your new creation through <a href="https://weathersensor.apps.exosite.io">https://weathersensor.apps.exosite.io</a>.</p>
+<p>I&#39;ve created another web UI that is associated with this new product ID, you can now see your new creation through <a href="https://er-simple-demo.apps.exosite.io">https://er-simple-demo.apps.exosite.io</a>.</p>
 <h2 id="bonus-points">Bonus Points</h2>
 <h3 id="humidity">Humidity</h3>
-<p>The libraries you included also have a <code>getHumidity()</code>function, see if you can figure out how to write this to the &quot;humidity&quot; dataport that is also part of the client model you&#39;re using. Use the code that writes the temperature as a template.</p>
+<p>The libraries you included earlier in the lab also provide a <code>getHumidity()</code>function, see if you can figure out how to use this to write humidity values to the &quot;humidity&quot; dataport that is also already part of the client model you&#39;re using. Use the code that writes the temperature as a template.</p>
 <h3 id="data-use-efficiency">Data Use Efficiency</h3>
 <p>Make the device use data more efficiently, you should implement an algorithm to only update the value written to the platform if there is a not-insignificant change in the value of the temperature.</p>
 <blockquote>
