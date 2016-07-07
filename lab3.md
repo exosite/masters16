@@ -183,6 +183,10 @@ Since we changed some files outside MPLAB I'd suggest doing a clean build just t
 
 ![Clean Build Button](../images/clean_build_button.png)
 
+## Attach the Hardware
+
+If you don't already have the Click boards attached to the main starter kit board, you should do that now. Slot the two Click boards onto the adapter board, then attach the adapter board to the 40-pin header on the starter kit as shown.
+
 ## Using your New Creation
 
 I've created another web UI that is associated with this new product ID, you can now see your new creation through [https://er-simple-demo.apps.exosite.io](https://er-simple-demo.apps.exosite.io).
