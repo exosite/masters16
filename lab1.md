@@ -65,7 +65,7 @@ To follow the progress of the application booting and connecting, or to troubles
 
 Once the board has booted the application and connected you can control the LEDs and see the status of the buttons through a custom web app that was created specifically for this class.
 
-To find your board, go to https://labui.apps.exosite-dev.io/ and find your board in the list by looking at the MAC address. (Note: You can find you device's MAC address by watching the serial terminal output when you first boot the application.) Select your device and toggle some of the LEDs on and off or press SW1 or SW2 (next to the red and orange LEDs) on the board to see the "count" in the webui change.
+To find your board, go to [https://er-simple-demo.apps.exosite.io](https://er-simple-demo.apps.exosite.io) and find your board in the list by looking at the MAC address. (Note: You can find you device's MAC address by watching the serial terminal output when you first boot the application.) Select your device and toggle some of the LEDs on and off or press SW1 or SW2 (next to the red and orange LEDs) on the board to see the "count" in the webui change.
 
 <!-- NTS: The above URL will have to change when the app gets pushed to production next week. -->
 

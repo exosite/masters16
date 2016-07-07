@@ -185,7 +185,7 @@ Since we changed some files outside MPLAB I'd suggest doing a clean build just t
 
 ## Using your New Creation
 
-I've created another web UI that is associated with this new product ID, you can now see your new creation through [https://weathersensor.apps.exosite.io](https://weathersensor.apps.exosite.io).
+I've created another web UI that is associated with this new product ID, you can now see your new creation through [https://er-simple-demo.apps.exosite.io](https://er-simple-demo.apps.exosite.io).
 
 ## Bonus Points
 
