@@ -44,7 +44,7 @@ Next, in MPLAB, remove "switch_control.c" from the project (right-click menu). T
 
 ![Right Click Menu on App](../images/right_click_menu_on_app.png)
 
-You'll also want to copy over the system config folder from the zip file, also into the `er_vfp_microchip_harmony/firemware/src` directory, these files change what tasks our RTOS is running. The changes made a fairly straightforward, but as configuring and RTOS is outside the scope of the class we'll just copy the files for the sake of time. Feel free to find the changes or read the diff linked above.
+You'll also want to copy over the system config folder from the zip file, also into the `er_vfp_microchip_harmony/firemware/src` directory, these files change what tasks our RTOS is running. The changes made a fairly straightforward, but as configuring and RTOS is outside the scope of the class we'll just copy the files for the sake of time. Feel free to compare files for changes or read the diff linked above.
 
 Next we'll start modifying the app.c source itself. Near the top of the file, on line 112, we'll no longer need the global counter variable, you can remove it:
 
@@ -195,7 +195,7 @@ I've created another web UI that is associated with this new product ID, you can
 
 ### Humidity
 
-The libraries you included also have a `getHumidity()`function, see if you can figure out how to write this to the "humidity" dataport that is also part of the client model you're using. Use the code that writes the temperature as a template.
+The libraries you included earlier in the lab also provide a `getHumidity()`function, see if you can figure out how to use this to write humidity values to the "humidity" dataport that is also already part of the client model you're using. Use the code that writes the temperature as a template.
 
 ### Data Use Efficiency
 
