@@ -63,6 +63,7 @@ Next, find the 'on_read' function, remove all the existing code from inside it, 
 
 ```c
 if (status == ERR_SUCCESS) {
+  printf("Value read from server \"%s\" to %s\n", alias, value);
   if(!strcmp("display", alias)) {
     display_print_remote_msg(value);
     appData.remote_msg_initialized = INITIALIZED;
@@ -76,12 +77,14 @@ if (status == ERR_SUCCESS) {
 Do the same thing in 'on_change':
 
 ```c
-ASSERT(!strcmp("display", alias));
-
 if (status == ERR_SUCCESS) {
-  appData.remote_msg_initialized = INITIALIZED;
   printf("Value changed on server \"%s\" to %s\n", alias, value);
-  display_print_remote_msg(value);
+  if (!strcmp("display", alias)) {
+    appData.remote_msg_initialized = INITIALIZED;
+
+    int val = atoi(value);
+    display_print_remote_msg(value);
+  }
 }
 ```
 
