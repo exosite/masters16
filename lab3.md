@@ -48,9 +48,11 @@ Next, in MPLAB, remove "switch_control.c" from the project (right-click menu on 
 
 ![Right Click Menu on App](../images/right_click_menu_on_app.png)
 
-Next we want to add a few files already exist, but that MPLAB doesn't know about. Right-click on the 'Source Files' group and select 'Add Existing Items from Folders...', then select to the folder 'er_vfp_microchip_harmony/er_plat_microchip_pic32mzecsk' (you may need to go up a few directories first). This should add a 'display' directory and a 'platform_display.c' file to the 'er_plat_microchip_pic32mzecsk' group.
+Next we want to add a few files that already exist, but that MPLAB doesn't know about. Right-click on the 'Source Files' group and select 'Add Existing Items from Folders...', then select to the folder 'er_vfp_microchip_harmony/er_plat_microchip_pic32mzecsk' (you may need to go up a few directories first). This should add a 'display' directory and a 'platform_display.c' file to the 'er_plat_microchip_pic32mzecsk' group.
 
 We also need to enable some code in the platform files that is currently omitted by an `#ifndef`. The project properties have a preprocessor macro defined called 'NO_DISPLAY' that needs to be removed. To do so, open the project properties go to the 'xc32-gcc' item in the list, then choose 'Preprocessing and messages', next open the list of 'Preprocessor macros', and at the very bottom of the list select 'NO_DISPLAY' and click destroy. Exit the menus by clicking 'OK' on each.
+
+![Remove No Display](../images/remove_no_display.png)
 
 With all that out of the way, we can now get to the interesting part, we'll start modifying the app.c source itself.
 
