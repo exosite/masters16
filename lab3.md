@@ -170,11 +170,11 @@ First we need to add a "APP_DISPLAY_INIT" state to the "APP_STATES" enum. Second
 enum { NOT_INITIALIZED = 0, IN_PROGRESS, INITIALIZED } remote_msg_initialized;
 ```
 
-We've now re-configured everything to use our new sensor, reading the temperature, and our new display, to display messages read from the platform. There is, however, one last change I've saved for last. Our device is still identifying itself as the same type of device we used in the first two labs, but we're now expecting an entirely different set dataports for reading from and writing to. I've created a second product for our new weather sensor device to use, it has a product ID of "<TBD>", you need to change this in app.c. Near the beginning of "APP_Tasks" there's two variables `vendor` and `model`, set both of these to "<TBD>". You should now have:
+We've now re-configured everything to use our new sensor, reading the temperature, and our new display, to display messages read from the platform. There is, however, one last change I've saved for last. Our device is still identifying itself as the same type of device we used in the first two labs, but we're now expecting an entirely different set dataports for reading from and writing to. I've created a second product for our new weather sensor device to use, it has a product ID of "4yfpd06gr1thuxr", you need to change this in app.c. Near the beginning of "APP_Tasks" there's two variables `vendor` and `model`, set both of these to "4yfpd06gr1thuxr". You should now have:
 
 ```c
-char *vendor = "<TBD>";
-char *model = "<TBD>";
+char *vendor = "4yfpd06gr1thuxr";
+char *model = "4yfpd06gr1thuxr";
 ```
 
 Now, that's all! Make sure you've saved all the files.
