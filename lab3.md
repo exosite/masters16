@@ -196,15 +196,13 @@ char *vendor = "4yfpd06gr1thuxr";
 char *model = "4yfpd06gr1thuxr";
 ```
 
-Now, that's all! Make sure you've saved all the files.
-
-Since we changed some files outside MPLAB I'd suggest doing a clean build just to make sure all our changes are compiled in. Then program the new firmware to the device
-
-![Clean Build Button](../images/clean_build_button.png)
+Now, that's all! Make sure you've saved all the files, then once again click the "Make and Program Device" button.
 
 ## Attach the Hardware
 
 If you don't already have the Click boards attached to the main starter kit board, you should do that now. Slot the two Click boards onto the adapter board, then attach the adapter board to the 40-pin header on the starter kit as shown.
+
+![Assembled Photo](../images/assembled_photo.jpg)
 
 ## Using your New Creation
 
