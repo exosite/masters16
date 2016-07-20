@@ -25,7 +25,7 @@ You will also need to have [Git SCM](https://git-scm.com/) (or any git access to
 3. Clone the repository to the current folder.
 
    ```
-   git clone https://github.com/exositeready/er_vfp_microchip_harmony.git
+   git clone --branch masters https://github.com/exositeready/er_vfp_microchip_harmony.git
    ```
 
 4. Navigate into the newly created `er_vfp_microchip_harmony` folder.

@@ -36,25 +36,9 @@ To change this we'll need to remove all the code that handles the LEDs and butto
 
 ## Let's Go
 
-The biggest, and easiest, changes will be the removal of the file containing the bulk of the code controlling the switches and the addition of the files containing the bulk of the code controlling the weather sensor and display, let's start with that.
+The first, very important, step is to switch the build configuration that our project is using. It should currently be set to "basic_demo", you'll want to flip it to "weather_demo". This simply changes some build flags that switch out some code that I've put behind build flags. Since this class isn't about how to configure an RTOS or the actual interfaces for our sensors we won't spend our precious time going through changing those setting manually. If you're curious what is changing, feel free to explore what is changing in the code.
 
-The changes we're going to make first are fairly straightforward, but as configuring as exactly how to use these sensors and configure RTOS is outside the scope of the class we'll just copy the files for the sake of time. Feel free to compare files for changes or read the diff linked above.
-
-If you haven't yet, download the [lab3_files.zip](../files/lab3_files.zip) file, then extract the files and copy the .c and .h files (one each for "display_ctrl" and "sensor") to the `er_vfp_microchip_harmony/firemware/src` directory.
-
-You'll also want to copy over the system config folder from the zip file. This also goes into the `er_vfp_microchip_harmony/firemware/src` directory, these files change what tasks our RTOS is running. Just delete the existing directory and copy over the new one.
-
-Next, in MPLAB, remove "switch_control.c" from the project (right-click menu on the file itself in MPLAB). Then add both "sensor.c" and "display_ctrl.c" to the project, I like to put them in the "app" group, do this by right-clicking on "app" under "Source Files" and choosing "Add Existing Item".
-
-![Right Click Menu on App](../images/right_click_menu_on_app.png)
-
-Next we want to add a few files that already exist, but that MPLAB doesn't know about. Right-click on the 'Source Files' group and select 'Add Existing Items from Folders...', then select to the folder 'er_vfp_microchip_harmony/er_plat_microchip_pic32mzecsk' (you may need to go up a few directories first). This should add a 'display' directory and a 'platform_display.c' file to the 'er_plat_microchip_pic32mzecsk' group.
-
-We also need to enable some code in the platform files that is currently omitted by an `#ifndef`. The project properties have a preprocessor macro defined called 'NO_DISPLAY' that needs to be removed. To do so, open the project properties go to the 'xc32-gcc' item in the list, then choose 'Preprocessing and messages', next open the list of 'Preprocessor macros', and at the very bottom of the list select 'NO_DISPLAY' and click destroy. Exit the menus by clicking 'OK' on each.
-
-![Remove No Display](../images/remove_no_display.png)
-
-With all that out of the way, we can now get to the interesting part, we'll start modifying the app.c source itself.
+With that out of the way, we can now get to the interesting part, we'll start modifying the app.c source itself.
 
 Near the top of the file, on line 112, we'll no longer need the global counter variable, you can remove it:
 
@@ -206,7 +190,7 @@ If you don't already have the Click boards attached to the main starter kit boar
 
 ## Using your New Creation
 
-I've created another web UI that is associated with this new product ID, you can now see your new creation through [https://er-simple-demo.apps.exosite.io](https://er-simple-demo.apps.exosite.io).
+I've created another web UI that is associated with this new product ID, you can now see your new creation through [https://weather-sensor-demo.apps.exosite.io](https://weather-sensor-demo.apps.exosite.io).
 
 ## Bonus Points
 
