@@ -23,7 +23,7 @@ In this lab you'll go through getting the PIC32MZ Embedded Connectivity Starter 
 * The ExositeReady SDK, plus
   * The PIC32MZECSK port & example application
 
-If you don't have any of the above software installed, see the [Lab Setup Guide](../setup) before proceeding with this Lab. MASTERS attendees that have access to the in-class lab computers should have everything setup already.
+If you don't have any of the above software installed, see the [Lab Setup Guide](http://exosite.github.io/masters16/setup) (or the last page of the printed manual) before proceeding with this Lab. MASTERS attendees that have access to the in-class lab computers should have everything setup already.
 
 # Let's Go
 
@@ -69,7 +69,7 @@ To follow the progress of the application booting and connecting, or to troubles
 
 Once the board has booted the application and connected you can control the LEDs and see the status of the buttons through a custom web app that was created specifically for this class.
 
-To find your board, go to [https://er-simple-demo.apps.exosite.io](https://er-simple-demo.apps.exosite.io) and find your board in the list by looking at the MAC address. (Note: You can find you device's MAC address by watching the serial terminal output when you first boot the application.) Select your device and toggle some of the LEDs on and off or press SW1 or SW2 (next to the red and orange LEDs) on the board to see the "count" in the webui change.
+To find your board, go to [https://er-simple-demo.apps.exosite.io](https://er-simple-demo.apps.exosite.io/) and find your board in the list by looking at the MAC address. (Note: You can find you device's MAC address by watching the serial terminal output when you first boot the application.) Select your device and toggle some of the LEDs on and off or press SW1 or SW2 (next to the red and orange LEDs) on the board to see the "count" in the webui change.
 
 ## End of Lab 1
 

@@ -32,7 +32,7 @@ You've been provided with a couple of mikrobus click boards, one containing a 'w
 
 To change this we'll need to remove all the code that handles the LEDs and buttons and replace it with code that handles talking I2C to the [BME280](https://www.bosch-sensortec.com/bst/products/all_products/bme280) temperature/pressure/humidity sensor and SPI to the controller for the OLED display.
 
-> Note: If you get stuck at any point during this tutorial, you can run `git diff origin/click_shield_demo {filename}` to compare your current file to what we're going for. For example, to compare your app.c file to my final app.c, run `git diff origin/click_shield_demo firmware/src/app.c` from the `er_vfp_microchip_harmony` folder. If you can't or don't want to use git, the output of the full project diff is available [here](../files/lab3_changes.patch).
+> Note: If you get stuck at any point during this tutorial, you can run `git diff origin/click_shield_demo {filename}` to compare your current file to what we're going for. For example, to compare your app.c file to my final app.c, run `git diff origin/click_shield_demo firmware/src/app.c` from the `er_vfp_microchip_harmony` folder. If you can't or don't want to use git, the output of the full project diff is on the class [website](http://exosite.github.io/masters16/).
 
 ## Let's Go
 
@@ -203,3 +203,9 @@ The libraries you included earlier in the lab also provide a `getHumidity()`func
 Make the device use data more efficiently, you should implement an algorithm to only update the value written to the platform if there is a not-insignificant change in the value of the temperature.
 
 > Note: in the real world you should make your algorithm report at some minimal interval just to make sure you have a way to determine if any of your devices have died or lost their connection. It's up to you if you'd like to do that here.
+
+## End of Lab 3
+
+You've now completed this, the final lab of the class. You should now have a fairly good grasp on how the ExositeReady SDK works.
+
+If there's still time left in the class, or if you're following the labs at home, the (class website)[http://exosite.github.io/masters16/] has a few more bonus labs that will teach you more about the embedded protocol options you have as well as about how Exosite's new Murano platform works.

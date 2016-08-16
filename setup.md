@@ -6,6 +6,8 @@ date: 2016-06-17 12:00:00
 order: 98
 ---
 
+# Setup
+
 This document will walk you through installing the ExositeReady SDK's example application for the PIC32MZ Embedded Connectivity Starter Kit.
 
 ## Prerequisites
